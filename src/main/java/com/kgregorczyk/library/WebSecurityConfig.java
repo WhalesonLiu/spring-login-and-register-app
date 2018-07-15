@@ -37,7 +37,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     http
         .authorizeRequests()
         .antMatchers("/").authenticated()
-        .antMatchers("/home").permitAll()
         .antMatchers("/register").permitAll()
         .antMatchers("/user").hasRole("USER")
         .anyRequest().authenticated()
@@ -45,8 +44,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .formLogin()
         .usernameParameter("email")
         .loginPage("/login")
-        .successForwardUrl("/home")
-        .defaultSuccessUrl("/home")
         .permitAll()
         .and()
         .rememberMe();

@@ -1,32 +1,11 @@
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
-<div th:fragment="header-css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="">
+<meta name="author" content="">
+<script defer src="https://use.fontawesome.com/releases/v5.0.8/js/fontawesome.js"
+        integrity="sha384-7ox8Q2yzO/uWircfojVuCQOZl+ZZBg2D2J5nkpLqzH1HY0C1dHlTKIbpRz/LG23c" crossorigin="anonymous"></script>
 
-  <link rel="stylesheet" type="text/css"
-        href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css"/>
-</div>
-<div th:fragment="header(activeItem)">
-  <nav class="navbar navbar-inverse">
-    <div class="container">
-      <div class="navbar-header">
-        <a class="navbar-brand" th:href="@{/home}">Spring Boot</a>
-      </div>
-      <div id="navbar" class="collapse navbar-collapse">
-        <ul class="nav navbar-nav">
-          <li th:classappend="${#strings.equals(activeItem, 'home') ? 'active': ''}"><a
-              th:href="@{/home}">Home</a></li>
-          <li sec:authorize="!isAuthenticated()"
-              th:classappend="${#strings.equals(activeItem, 'register') ? 'active': ''}"><a
-              th:href="@{/register}">Register</a></li>
-          <li sec:authorize="!isAuthenticated()"
-              th:classappend="${#strings.equals(activeItem, 'login') ? 'active': ''}"><a
-              th:href="@{/login}">Login</a></li>
-          <li sec:authorize="isAuthenticated()">
-            <a th:href="@{/logout}">Logout</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-</div>
-</html>
+<link rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css"
+      integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B"
+      crossorigin="anonymous">
