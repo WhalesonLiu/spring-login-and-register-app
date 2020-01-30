@@ -35,12 +35,13 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
-@Table(name = "role")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(exclude = {"roles", "articles"})
-//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@EqualsAndHashCode(exclude = {"roles", "articles"}, callSuper = true)
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@Table(name = "blog_user", indexes = {@Index(columnList = "email", unique = true)})
 public class User extends CreateAndLastModifiedDate implements UserDetails, Serializable {
 
   private static final long serialVersionUID = 1881229773610861294L;
@@ -102,4 +103,3 @@ public class User extends CreateAndLastModifiedDate implements UserDetails, Seri
   }
 
 }
-
