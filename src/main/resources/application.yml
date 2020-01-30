@@ -1,47 +1,26 @@
+server:
+  port: 8000
 spring:
   session:
     store-type: redis
     timeout: "3600"
-  database-platform: org.hibernate.dialect.PostgreSQL9Dialect
   jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
     properties:
       hibernate:
         temp:
           use_jdbc_metadata_defaults: false
-server:
-  port: 8000
-
----
-
-spring:
-  profiles: development
-  datasource:
-    url: jdbc:postgresql://localhost:5432/blog
-    username: postgres
-  jpa:
-    hibernate:
-      ddl-auto: update
-    generate-ddl: true
-  thymeleaf:
-    cache: false
-    prefix: file:src/main/resources/templates/
-  resources:
-    static-locations: file:src/main/resources/static/
-    cache:
-      period: "0"
-
----
-
-spring:
-  profiles: production
   redis:
-    host: redis
+    host: localhost
+    password: password
+    timeout: 6000
   thymeleaf:
     cache: true
   datasource:
-    url: jdbc:postgresql://postgres:5432/blog
-    username: postgres
-  jpa:
-      hibernate:
-        ddl-auto: update
-      generate-ddl: true
+    url: jdbc:mysql://localhost:3306/blog?useUnicode=true&characterEncoding=utf8
+    username: root
+    password: root
+    driver-class-name: com.mysql.jdbc.Driver

@@ -22,9 +22,6 @@ import lombok.ToString;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = {"users"})
-@ToString(exclude = {"users"})
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Table(name = "role", indexes = {@Index(columnList = "name", unique = true)})
 public class Role implements Serializable {
   private static final long serialVersionUID = 768193107575285028L;
@@ -35,7 +32,7 @@ public class Role implements Serializable {
 
   private String name;
 
-  @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
+  /*@ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
   @JsonManagedReference
-  private Set<User> users;
+  private Set<User> users;*/
 }
