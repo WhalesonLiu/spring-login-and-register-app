@@ -52,7 +52,7 @@ public class UserController {
       user.setPassword(userForm.getPassword());
       userService.createBasicUser(user);
       userService.autoLogin(userForm.getEmail(), userForm.getPassword());
-      return new ModelAndView("redirect:/home");
+      return new ModelAndView("redirect:/index");
     } else {
       userForm.setEmail(userForm.getEmail().toLowerCase());
       ModelAndView template = new ModelAndView("register", "registerUserForm", userForm);

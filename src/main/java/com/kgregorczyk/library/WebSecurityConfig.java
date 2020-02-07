@@ -45,7 +45,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .usernameParameter("email")
         .loginPage("/login")
         .permitAll()
-        .and()
+        .and().csrf().disable()//spring boot 集成 spring securty登陆时报 403 https://blog.csdn.net/qq_35170213/article/details/86014394
         .rememberMe();
   }
 

@@ -9,15 +9,43 @@
 <div th:replace="fragments/navbar :: header('index')"/>
 <main role="main" class="container">
   <div class="container">
-
     <div class="starter-template">
-      <h1>Latest articles</h1>
+      <h3>新型冠状病毒感染的肺炎疫情情况</h3>
     </div>
+    <!-- 新增确诊病例-->
+    <div class="row" id="2019nCoV-new-confirmed-cases" style="height:400px;">
+
+    </div>
+
+    <div class="row" id="2019nCoV-new-deaths-chart" style="height:400px;">
+
+    </div>
+
 
   </div>
 </main>
 
-<div th:replace="fragments/footer :: footer"/>
+<footer>
+  <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
 
+  <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.js"></script>
+
+  <script src="https://cdn.bootcss.com/echarts/4.4.0-rc.1/echarts.min.js"></script>
+
+  <script src="/2019-nCoV.js"></script>
+</footer>
 </body>
+<script type="text/javascript">
+
+  window.onload = function(){
+
+    //新增确诊病例
+    window.drawChart('2019nCoV-new-confirmed-cases', '新增确诊病例', null,['newConfirmedCasesNationwide','newConfirmedCasesHuBei']);
+
+    //新增重症病例(例) - 新增死亡病例(例)
+    window.drawChart('2019nCoV-new-deaths-chart', '新增重症/死亡病例', null,['newSevereCasesNationwide','newDeathsNationwide']);
+
+  }
+
+</script>
 </html>
