@@ -189,9 +189,9 @@
                 url : '/2019-nCoV',
                 data : JSON.stringify(addNCIObj),//400
                 contentType: "application/json;charset=utf-8",
-                success : function(result) {
+                success : function(expressResult) {
                     alert('OK~');
-                    console.log(result);
+                    console.log(expressResult);
                 },
                 dataType : 'json'
             });

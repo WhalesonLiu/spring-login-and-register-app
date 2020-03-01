@@ -46,8 +46,8 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public User findByEmail(String email) {
-    return userRepository.findByEmail(email);
+  public User findByUsername(String email) {
+    return userRepository.findByUsername(email);
   }
 
   @Override
@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public void autoLogin(String email, String password) {
-    UserDetails userDetails = this.findByEmail(email);
+    UserDetails userDetails = this.findByUsername(email);
     UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
         new UsernamePasswordAuthenticationToken(userDetails, password,
             userDetails.getAuthorities());
@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-    User user = this.findByEmail(email);
+    User user = this.findByUsername(email);
     if (user == null) {
       throw new UsernameNotFoundException(
           String.format("User with email %s was not found!", email));

@@ -1,0 +1,147 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>添加用户</title>
+  <div th:replace="fragments/header"/>
+</head>
+<body>
+
+<div th:replace="fragments/navbar :: header('index')"/>
+<main role="main" class="container">
+  <div class="container">
+
+    <div style="margin-top:20px">
+        <form  id="add-2019-nCoV-form" autocomplete="off">
+          <fieldset>
+              <h3>基本信息</h3>
+              <div th:if="${success}">
+                  <div class="alert alert-success" th:text="${success}"/>
+              </div>
+              <div th:if="${warning}">
+                  <div class="alert alert-warning" th:text="${warning}"/>
+              </div>
+
+              <div class="form-group row">
+                  <label for="real-name" class="col-sm-2 col-form-label" >姓名</label>
+                  <div class="col-sm-3">
+                      <input type="text"  class="form-control" id="real-name" autocomplete="off">
+                  </div>
+
+                  <label class="offset-sm-1 col-sm-2 control-label">性别:</label>
+                  <div class="col-md-3">
+                      <select class="form-control">
+                          <option value="male" selected="selected">男</option>
+                          <option value="female">女</option>
+                      </select>
+                  </div>
+              </div>
+              <div class="form-group row">
+                  <label for="weChatAccount" class="col-sm-2 col-form-label" >微信号</label>
+                  <div class="col-sm-3">
+                      <input type="text"  class="form-control" id="weChatAccount" autocomplete="off" required>
+                  </div>
+
+                  <label for="weChatName" class="offset-sm-1 col-sm-2 col-form-label" >微信昵称</label>
+                  <div class="col-sm-3">
+                      <input type="text"  class="form-control" id="weChatName" autocomplete="off">
+                  </div>
+              </div>
+              <div class="form-group row">
+                  <label for="joinDate" class=" col-sm-2 col-form-label" >生日</label>
+
+                  <div class="col-sm-3">
+                      <input type="date"  class="form-control" id="joinDate" autocomplete="off">
+                  </div>
+              </div>
+              <div class="form-group row">
+                  <label for="userRemark" class=" col-sm-2 col-form-label" >用户备注信息</label>
+
+                  <div class="col-sm-8">
+                      <textarea id="userRemark" class="form-control" autocomplete="off"></textarea>
+                  </div>
+              </div>
+              <h3>收货信息</h3>
+              <ul class="list-unstyled" id="delivery-info-list">
+                  <li  style="border: 1px dashed #ced4da;">
+                      <div class="form-group row" style="margin-top: 10px;">
+                          <label for="deliveryName" class=" col-sm-2 col-form-label" >&nbsp;&nbsp;&nbsp;&nbsp;收货人姓名</label>
+
+                          <div class="col-sm-3">
+                              <input type="text"  class="form-control" id="deliveryName" autocomplete="off">
+                          </div>
+
+                          <label for="phoneNumber" class="offset-sm-1 col-sm-2 col-form-label" >&nbsp;&nbsp;&nbsp;&nbsp;收货人手机号</label>
+                          <div class="col-sm-3">
+                              <input type="text"  class="form-control" id="phoneNumber" autocomplete="off">
+                          </div>
+                      </div>
+
+                      <div class="form-group row">
+                          <label for="deliveryAddress" class=" col-sm-2 col-form-label" >&nbsp;&nbsp;&nbsp;&nbsp;收货人地址</label>
+
+                          <div class="col-sm-8">
+                              <input type="text"  class="form-control" id="deliveryAddress" autocomplete="off">
+                          </div>
+                      </div>
+
+                      <div class="form-group row">
+                          <label for="remark" class=" col-sm-2 col-form-label" >&nbsp;&nbsp;&nbsp;&nbsp;备注</label>
+
+                          <div class="col-sm-8">
+                              <textarea  class="form-control" id="remark" autocomplete="off"></textarea>
+                          </div>
+                      </div>
+                  </li>
+              </ul>
+              <div class="form-group row">
+                  <button id="add-address" type="button" class="offset-sm-1 col-sm-10 btn" style="border: 1px dashed #ced4da;cursor: pointer;">
+                      添加地址信息
+                  </button>
+              </div>
+              <div class="form-group row d-none" id="remove-address-col">
+                  <button id="remove-address" type="button" class=" offset-sm-1 col-sm-10 btn" style="border: 1px dashed #ced4da;cursor: pointer;">
+                      删除地址信息
+                  </button>
+              </div>
+
+              <div id="add-address-info">
+
+              </div>
+            <div class="form-group row">
+              <input type="submit" id="NCoV-add-submit-btn" class="btn btn-lg btn-primary btn-block center-block col-lg-4 offset-lg-4" value="添加"/>
+            </div>
+          </fieldset>
+        </form>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+    <script src="https://cdn.bootcss.com/echarts/4.4.0-rc.1/echarts.min.js"></script>
+
+    <script src="/common-util.js"></script>
+
+</footer>
+</body>
+<script type="text/javascript">
+
+    $(function($){
+        //添加地址信息
+        $('#add-address').click(function(){
+
+            window.addFunctionLine('user','#delivery-info-list','#remove-address-col');
+
+        });
+        //删除地址信息
+        $('#remove-address').click(function(){
+
+            window.removeFunctionLine('user','#delivery-info-list','#remove-commodity-col');
+
+        });
+
+    });
+</script>
+</html>

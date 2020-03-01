@@ -11,11 +11,11 @@ import org.springframework.validation.BindingResult;
  */
 public class Message {
 
-	private int code;
+	private String code;
 	private String message;
 	private Object content;
 
-	public int getCode() {
+	public String getCode() {
 		return code;
 	}
 
@@ -45,17 +45,17 @@ public class Message {
 		
 	}
 	public Message(String message) {
-		this.code = 500;
+		this.code = "500";
 		this.message = message;
 		this.content = "";
 	}
 	
-	public Message(int code, String message) {
+	public Message(String code, String message) {
 		this.code = code;
 		this.message = message;
 	}
 
-	public Message(int code, String message, Object content) {
+	public Message(String code, String message, Object content) {
 		this.code = code;
 		this.message = message;
 		this.content = content;
@@ -68,7 +68,7 @@ public class Message {
 		
 	}
 	public void setMsg(BindingResult bindingResult) {
-		this.code =  Integer.parseInt(bindingResult.getGlobalError().getCode());
+		this.code =  bindingResult.getGlobalError().getCode();
 		this.message = bindingResult.getGlobalError().getDefaultMessage();
 		this.content = "no content";
 	}
@@ -78,13 +78,13 @@ public class Message {
 		this.content = content;
 		
 	}
-	public void setMsg(int code, String message) {
+	public void setMsg(String code, String message) {
 		this.code = code;
 		this.message = message;
 		this.content = "no content";
 	}
 
-	public void setMsg(int code, String message, Object content) {
+	public void setMsg(String code, String message, Object content) {
 		this.code = code;
 		this.message = message;
 		this.content = content;

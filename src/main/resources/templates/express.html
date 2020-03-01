@@ -1,0 +1,176 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>查快递</title>
+    <div th:replace="fragments/header"/>
+</head>
+<body>
+
+<div th:replace="fragments/navbar :: header('index')"/>
+<main role="main" class="container">
+    <div class="container">
+
+
+        <div style="margin-top:40px">
+            <form  id="add-2019-nCoV-form" autocomplete="off">
+                <fieldset>
+                    <h3>快递查询</h3>
+                    <div th:if="${success}">
+                        <div class="alert alert-success" th:text="${success}"/>
+                    </div>
+                    <div th:if="${warning}">
+                        <div class="alert alert-warning" th:text="${warning}"/>
+                    </div>
+
+                    <div class="form-group row" >
+
+                        <div class="offset-sm-1 col-sm-8 ml-auto">
+                            <input type="text"  class="form-control" id="express-search" autocapitalize="off"
+                                   placeholder='请输入手机号，多个手机号以";"分割' required>
+                        </div>
+                        <button type="button" class="btn btn-primary offset-sm-1 col-sm-1 ml-auto" id="search-express-btn">查询</button>
+                    </div>
+                </fieldset>
+            </form>
+            <ul class="list-unstyled" id="express-info-list">
+
+
+            </ul>
+        </div>
+        <div class="starter-template">
+        </div>
+    </div>
+</main>
+
+<footer>
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+    <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.js"></script>
+
+</footer>
+</body>
+<script type="text/javascript">
+
+    $(function($){
+
+        //查询快递
+        $('#search-express-btn').click(function () {
+            var expressInfoList = $('#express-info-list');
+            expressInfoList.empty();
+            var searchIptObj = $('#express-search');
+            var searchIptVal = searchIptObj.val();
+            var searchVal  = new Array();
+            searchVal = searchIptVal.split(';');
+
+            console.log(searchVal);
+
+            var keys = {
+                keys : searchVal
+            }
+            $.ajax({
+                async : false,
+                type : 'GET',
+                url : '/express/list',
+                contentType: "application/json;charset=utf-8",
+                data : keys,//400
+                success : function(result) {
+                    var content = result.content;
+                    console.log(content);
+
+                    content.forEach(function(item,index){
+
+                        var contentCode = item.code;
+                        if( contentCode == '200'){
+
+                            var trObj = $('<li></li>');
+                            /*var title = $('<span>'+ item.message+'</span>');
+                            trObj.append(title);*/
+                            var sonUlObj = $('<ul class="list-unstyled" style="padding:0px;"></ul>');
+                            item.data.forEach(function (element,i) {
+                                console.log(element);
+
+                                var detailOrder = element.detailOrder;
+
+                                var expressli = $('<li style="padding: 10px 0px;margin-top:10px;border: 1px solid #ced4da;min-height: 110px;"></li>');
+                                var expressImgDiv = $('<div class="float-left"  style="padding-left:10px;width:90px;"></div>');
+                                var expressImgObj = $('<img   class="img-thumbnail m-auto" width="80">').attr('src',element.goodsImageUrl);
+                                expressImgDiv.append(expressImgObj);
+                                expressli.append(expressImgDiv);
+
+                                var goodsInfoDiv = $('<div class="d-inline-block" style="padding-left: 10px;width:calc(100% - 90px);"></div>');
+                                //商品名称
+                                var  goodsNameSpan = $('<strong class="d-inline-block font-weight:bold;"></strong>').append(element.goodsName );
+                                goodsInfoDiv.append(goodsNameSpan);
+                                //商品数量
+                                var goodsPieces = $('<span style="color: #909090;">&nbsp;×&nbsp;'+ detailOrder.goodsPieces +'</span>')
+                                goodsInfoDiv.append(goodsPieces);
+
+                                /*
+                                //单价
+                                var retailPrice = $('<span class="col-sm-1"></span>').append("单价:" +  detailOrder.retailPrice);
+                                expressli.append(retailPrice);
+                                //运费
+                                var goodsAmountShipping = $('<span class="col-sm-1"></span>').append("运费:" +  detailOrder.goodsAmountShipping);
+                                expressli.append(goodsAmountShipping);*/
+
+                                //
+                                expressli.append(goodsInfoDiv);
+
+                                var orderStatusObj = $('<div class="d-inline-block" style="padding-left: 10px;width:calc(100% - 90px);"></div>');
+
+                                /*//商品数量
+                                var goodsPieces = $('<span class="d-inline-block"></span>').append('<span style="color: #6C6C6C;font-size:0.8rem;">商品数量:</span>'  +  '<span style="color: #1E5B30;font-weight:bold;">'+ detailOrder.goodsPieces +'</span>');
+                                orderStatusObj.append(goodsPieces);*/
+                                //总价
+                                var goodsAmountReceivable = $('<div class="d-inline-block " style="width: 80px;"></div>').append('<span style="color: #6C6C6C;font-size:0.8rem;">总价:</span>' +  '<span style="color: #1E5B30;font-weight:bold;">￥</span><span style="color: #1E5B30;font-weight:bold;">'+ detailOrder.goodsAmountReceivable +'</span>');
+                                orderStatusObj.append(goodsAmountReceivable);
+                                //订单状态
+                                var orderStatus = $('<span class="d-inline-block float-right" style="padding-right: 10px; color: #FF4C00;"></span>').append( element.orderStatus);
+                                orderStatusObj.append(orderStatus);
+
+                                expressli.append(orderStatusObj);
+
+                                var expressStatusObj = $('<div class="d-inline-block" style="padding-left: 10px;width:calc(100% - 90px);"></div>');
+                                //运费
+                                var goodsAmountShippingObj = $('<span class="d-inline-block " ></span>').append('<span style="color: #6C6C6C;font-size:0.8rem;">运费:</span>' + '<span style="color: #1E5B30;font-weight:bold;">￥</span><span style="color: #1E5B30;font-weight:bold;">'+detailOrder.goodsAmountShipping+ '</span>');
+                                expressStatusObj.append(goodsAmountShippingObj);
+                                //日期
+                                var commitTime = $('<span class="d-inline-block float-right" style="width: 95px;padding-right: 10px;color: gray;"></span>').append( element.commitTime);
+                                expressStatusObj.append(commitTime);
+                                expressli.append(expressStatusObj);
+
+                                //快递最新信息
+                                if(detailOrder.orderTrackings != null){
+                                    detailOrder.orderTrackings.forEach(function (orderTracking,i) {
+                                        var orderTrackingDiv = $('<div class="" style="padding-left: 10px;margin-top: 10px;"></div>');
+                                        var expressCompanyNameObj = $('<span style="color: #6c6c6c;font-size: 0.9rem;"></span>').append(orderTracking.expressCompanyName + "：" + orderTracking.trackingNo);
+                                        orderTrackingDiv.append(expressCompanyNameObj);
+                                        expressli.append(orderTrackingDiv);
+                                        var lastProcessObj = $('<div class="d-inline-block" style="padding: 0 10px;color: rgb(234, 122, 56);"></div>').append(orderTracking.lastProcess);
+                                        expressli.append(lastProcessObj);
+
+                                    });
+
+                                }
+                                sonUlObj.append(expressli);
+
+                            });
+                            trObj.append(sonUlObj);
+
+                        }
+                        expressInfoList.append(trObj);
+                    });
+
+
+
+
+
+
+                },
+                dataType : 'json'
+            });
+        });
+    });
+
+</script>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>添加商品</title>
+  <div th:replace="fragments/header"/>
+</head>
+<body>
+
+<div th:replace="fragments/navbar :: header('index')"/>
+<main role="main" class="container">
+  <div class="container">
+
+    <div style="margin-top:20px">
+        <form  id="add-2019-nCoV-form" autocomplete="off">
+          <fieldset>
+              <h3>添加商品</h3>
+              <div th:if="${success}">
+                  <div class="alert alert-success" th:text="${success}"/>
+              </div>
+              <div th:if="${warning}">
+                  <div class="alert alert-warning" th:text="${warning}"/>
+              </div>
+
+              <div class="form-group row">
+                  <label class="col-sm-2 col-form-label" >商品类型</label>
+                  <div class="col-sm-3">
+                      <select class="form-control">
+                          <option value="fresh-fruit" selected="selected">新鲜水果</option>
+                          <option value="vegetables">蔬菜米蛋</option>
+                          <option value="casual-snacks">休闲零食</option>
+                      </select>
+                  </div>
+
+                  <label for="commodity-name" class="offset-sm-1 col-sm-2 col-form-label" >商品名称</label>
+                  <div class="col-sm-3">
+                      <input type="text"  class="form-control" id="commodity-name" autocapitalize="off">
+                  </div>
+
+              </div>
+
+
+              <div class="form-group row">
+                  <label for="commodity-specifications" class="col-sm-2 col-form-label" >商品规格</label>
+                  <div class="col-sm-3">
+                      <input type="text"  class="form-control" id="commodity-specifications" autocapitalize="off">
+                  </div>
+
+                  <label for="origin-dispatch" class="offset-sm-1 col-sm-2 col-form-label" >产地/分发地</label>
+                  <div class="col-sm-3">
+                      <input type="text"  class="form-control" id="origin-dispatch" autocapitalize="off">
+                  </div>
+
+              </div>
+              <div class="form-group row">
+                  <label for="original-price" class="col-sm-2 col-form-label" >成本价</label>
+                  <div class="col-sm-3">
+                      <input type="number"  class="form-control" id="original-price" autocapitalize="off" min="0" step="0.01">
+                  </div>
+
+                  <label for="price" class="offset-sm-1 col-sm-2 col-form-label" >售价</label>
+                  <div class="col-sm-3">
+                      <input type="number"  class="form-control" id="price" autocapitalize="off" min="0" step="0.01">
+                  </div>
+              </div>
+              <div class="form-group row">
+
+                  <label for="commodity-desc" class="col-sm-2 col-form-label" >商品描述</label>
+                  <div class="col-sm-8">
+                      <textarea  class="form-control" id="commodity-desc" autocapitalize="off"></textarea>
+                  </div>
+              </div>
+
+              <div class="form-group row">
+
+                  <label for="express-company" class="col-sm-2 col-form-label" >快递公司</label>
+                  <div class="col-sm-8">
+                      <input type="text"  class="form-control" id="express-company" autocapitalize="off">
+                  </div>
+              </div>
+
+              <div class="form-group row">
+                  <label for="comments" class=" col-sm-2 col-form-label" >说明</label>
+
+                  <div class="col-sm-8">
+                      <textarea  class="form-control" id="comments" autocapitalize="off"></textarea>
+                  </div>
+              </div>
+
+            <div class="form-group row">
+              <input type="submit" id="NCoV-add-submit-btn" class="btn btn-lg btn-primary btn-block center-block col-lg-4 offset-lg-4" value="添加"/>
+            </div>
+          </fieldset>
+        </form>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+    <script src="https://cdn.bootcss.com/echarts/4.4.0-rc.1/echarts.min.js"></script>
+</footer>
+</body>
+<script type="text/javascript">
+
+    $(function($){
+        //添加新型冠状病毒感染的肺炎疫情情况
+        var addNCIForm = $('#add-2019-nCoV-form');
+        //新型冠状病毒感染的肺炎疫情情况折线图推叠图
+        //获取form表单里所有input的name和placeholder
+        console.log(addNCIForm);
+
+
+        var addNCIFormArrays = addNCIForm.serializeArray();
+        console.log(addNCIFormArrays);
+        console.log(addNCIForm.serialize());
+        //点击添加一条新型冠状病毒感染的肺炎疫情情况
+        addNCIForm.submit(function (data) {
+
+            var addNCIObj = {};
+            var addNCIFormArray = addNCIForm.serializeArray();
+            $.each(addNCIFormArray, function() {
+
+                if(this.name =='date' || this.name == 'beforeDate'){
+                    addNCIObj[this.name] = new Date(this.value);
+                }else {
+                    addNCIObj[this.name] = this.value;
+                }
+            });
+            console.log(addNCIFormArray);
+            console.log(addNCIObj);
+
+            $.ajax({
+                async : false,
+                type : 'POST',
+                url : '/2019-nCoV',
+                data : JSON.stringify(addNCIObj),//400
+                contentType: "application/json;charset=utf-8",
+                success : function(expressResult) {
+                    alert('OK~');
+                    console.log(expressResult);
+                },
+                dataType : 'json'
+            });
+
+            return false;
+        });
+    })
+</script>
+</html>

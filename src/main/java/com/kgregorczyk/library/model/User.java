@@ -2,6 +2,8 @@ package com.kgregorczyk.library.model;
 
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
+import static javax.persistence.TemporalType.DATE;
+import static javax.persistence.TemporalType.TIMESTAMP;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -9,18 +11,10 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.kgregorczyk.library.audit.CreateAndLastModifiedDate;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -41,7 +35,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @ToString(exclude = {"roles", "articles"})
 @EqualsAndHashCode(exclude = {"roles", "articles"}, callSuper = true)
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-@Table(name = "blog_user", indexes = {@Index(columnList = "email", unique = true)})
+@Table(name = "blog_user", indexes = {@Index(columnList = "username", unique = true)})
 public class User extends CreateAndLastModifiedDate implements UserDetails, Serializable {
 
   private static final long serialVersionUID = 1881229773610861294L;
@@ -52,14 +46,38 @@ public class User extends CreateAndLastModifiedDate implements UserDetails, Seri
 
   @NotEmpty
   @NotBlank
-  @Email
   @NotNull
-  private String email;
+  //姓名
+  private String realName;
+
+  //生日
+  @Temporal(DATE)
+  private Date birthDay;
+
+  //登录者的用户名(仅限可登录用户-管理员)
+  private String username;
+
+  private String password;
 
   @NotBlank
   @NotEmpty
   @NotNull
-  private String password;
+  //微信账号
+  private String weChatAccount;
+
+  //性别
+  private String gender;
+
+  //微信昵称
+  private String weChatName;
+
+  //积分
+  private Integer integral;
+
+  //备注
+  private String userRemark;
+
+  private String accessToken;
 
   @NotNull
   private boolean isEnabled = true;
@@ -69,9 +87,6 @@ public class User extends CreateAndLastModifiedDate implements UserDetails, Seri
   @JoinTable(name = "blog_user_role", joinColumns = @JoinColumn(name = "blog_user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
   private Set<Role> roles;
 
-  @OneToMany(cascade = CascadeType.ALL, mappedBy = "author", fetch = LAZY)
-  @JsonBackReference
-  private Set<Article> articles;
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -84,7 +99,7 @@ public class User extends CreateAndLastModifiedDate implements UserDetails, Seri
 
   @Override
   public String getUsername() {
-    return this.getEmail();
+    return this.username;
   }
 
   @Override

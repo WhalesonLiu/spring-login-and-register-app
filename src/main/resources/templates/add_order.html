@@ -1,0 +1,166 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>添加订单</title>
+  <div th:replace="fragments/header"/>
+</head>
+<body>
+
+<div th:replace="fragments/navbar :: header('index')"/>
+<main role="main" class="container">
+  <div class="container">
+
+    <div style="margin-top:20px">
+        <form  id="add-2019-nCoV-form" autocomplete="off">
+          <fieldset>
+              <h3>订单信息</h3>
+              <div th:if="${success}">
+                  <div class="alert alert-success" th:text="${success}"/>
+              </div>
+              <div th:if="${warning}">
+                  <div class="alert alert-warning" th:text="${warning}"/>
+              </div>
+
+
+              <div class="form-group row">
+                  <label for="order-no" class="col-sm-2 col-form-label" >订单编号</label>
+                  <div class="col-sm-3">
+                      <input type="text"  class="form-control" id="order-no" autocapitalize="off" disabled >
+                  </div>
+
+                  <label for="express-no" class="offset-sm-1 col-sm-2 col-form-label" >快递单号</label>
+                  <div class="col-sm-3">
+                      <input type="text"  class="form-control" id="express-no" autocapitalize="off">
+                  </div>
+
+              </div>
+              <div class="form-group row">
+                  <label for="weChatAccount" class="col-sm-2 col-form-label" >客户微信号</label>
+                  <div class="col-sm-3">
+                      <input type="text"  class="form-control" id="weChatAccount" autocapitalize="off">
+                  </div>
+
+                  <label for="delivery-name" class="offset-sm-1 col-sm-2 col-form-label" >收货人姓名</label>
+                  <div class="col-sm-3">
+                      <input type="text"  class="form-control" id="delivery-name" autocapitalize="off">
+                  </div>
+              </div>
+
+              <div class="form-group row">
+                  <label for="express-company" class="col-sm-2 col-form-label" >快递公司</label>
+                  <div class="col-sm-3">
+                      <input type="text"  class="form-control" id="express-company" autocapitalize="off">
+                  </div>
+
+                  <label for="freight" class="offset-sm-1 col-sm-2 col-form-label" >运费</label>
+                  <div class="col-sm-3">
+                      <input type="number"  class="form-control" id="freight" autocapitalize="off" min="0" step="0.01">
+                  </div>
+              </div>
+
+              <div class="form-group row">
+                  <label class="col-sm-2 col-form-label" >优惠券</label>
+                  <div class="col-sm-3">
+                      <select class="form-control">
+                          <option value="0" selected="selected">无优惠券</option>
+                          <option value="1" >1元优惠券</option>
+                          <option value="2">2元优惠券</option>
+                          <option value="3">3元优惠券</option>
+                          <option value="4">4元优惠券</option>
+                          <option value="5">5元优惠券</option>
+                      </select>
+                  </div>
+                  <label for="discount" class="offset-sm-1 col-sm-2 col-form-label" >折扣</label>
+                  <div class="col-sm-3">
+                      <select id="discount" class="form-control">
+                          <option value="100%" selected="selected">不打折</option>
+                          <option value="98%">9.8折</option>
+                          <option value="95%">9.5折</option>
+                          <option value="90%">9折</option>
+                          <option value="88%">8.8折</option>
+                          <option value="85%">8.5折</option>
+                          <option value="80%">8折</option>
+                      </select>
+                  </div>
+              </div>
+
+              <div class="form-group row">
+              </div>
+              <div class="form-group row">
+                  <label for="remark" class=" col-sm-2 col-form-label" >备注</label>
+
+                  <div class="col-sm-8">
+                      <input type="text"  class="form-control" id="remark" autocapitalize="off">
+                  </div>
+              </div>
+              <ul class="list-unstyled" id="order-commodity-list">
+
+                  <li class="form-group row">
+                      <label for="commodity-name-1" class="col-sm-2 col-form-label" >商品1名称</label>
+                      <div class="col-sm-3">
+                          <input type="text"  class="form-control" id="commodity-name-1" autocapitalize="off">
+                      </div>
+                      <label for="commodity-num-1" class="offset-sm-1 col-sm-1 col-form-label" >数量</label>
+                      <div class="col-sm-1">
+                          <input type="number"  class="form-control" id="commodity-num-1" autocapitalize="off" min="0" >
+                      </div>
+                  </li>
+              </ul>
+              <!--<div class="form-group row">
+
+                  <label for="commodity-name" class="col-sm-2 col-form-label" >商品1名称</label>
+                  <div class="col-sm-3">
+                      <input type="text"  class="form-control" id="commodity-name" autocapitalize="off">
+                  </div>
+                  <label for="commodity-num" class="offset-sm-1 col-sm-1 col-form-label" >数量</label>
+                  <div class="col-sm-1">
+                      <input type="number"  class="form-control" id="commodity-num" autocapitalize="off" min="0" >
+                  </div>
+              </div>-->
+              <div class="form-group row">
+
+              </div>
+              <div class="form-group row">
+                  <button id="add-commodity" type="button" class="offset-sm-1 col-sm-10 btn" style="border: 1px dashed #ced4da;cursor: pointer;">
+                      添加商品
+                  </button>
+              </div>
+              <div class="form-group row d-none" id="remove-commodity-col">
+                  <button id="remove-commodity" type="button" class=" offset-sm-1 col-sm-10 btn" style="border: 1px dashed #ced4da;cursor: pointer;">
+                      删除商品
+                  </button>
+              </div>
+            <div class="form-group row">
+              <input type="submit" id="NCoV-add-submit-btn" class="btn btn-lg btn-primary btn-block center-block col-lg-4 offset-lg-4" value="添加"/>
+            </div>
+          </fieldset>
+        </form>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+    <script src="https://cdn.bootcss.com/echarts/4.4.0-rc.1/echarts.min.js"></script>
+    <script src="/common-util.js"></script>
+</footer>
+</body>
+<script type="text/javascript">
+
+    $(function($){
+        //添加商品
+        $('#add-commodity').click(function () {
+
+            window.addFunctionLine('commodity','#order-commodity-list','#remove-commodity-col');
+
+        });
+        //删除商品
+        $('#remove-commodity').click(function(){
+            window.removeFunctionLine('commodity','#order-commodity-list','#remove-commodity-col');
+        });
+        //$(".index li:last").remove()
+    })
+</script>
+</html>

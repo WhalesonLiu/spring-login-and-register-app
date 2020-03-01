@@ -41,20 +41,21 @@ public class UserController {
   @PostMapping("/register")
   ModelAndView postRegister(@ModelAttribute("registerUserForm") @Valid RegisterUserForm userForm,
       BindingResult bindingResult) {
-    if (userService.findByEmail(userForm.getEmail().toLowerCase()) != null) {
+    if (userService.findByUsername(userForm.getUsername().toLowerCase()) != null) {
       bindingResult
           .addError(new FieldError(userForm.toString(), "email", "Email is already taken!"));
     }
     if (!bindingResult.hasErrors()) {
 
       User user = new User();
-      user.setEmail(userForm.getEmail().toLowerCase());
+      user.setUsername(userForm.getUsername());
+      //user.setEmail(userForm.getEmail().toLowerCase());
       user.setPassword(userForm.getPassword());
       userService.createBasicUser(user);
-      userService.autoLogin(userForm.getEmail(), userForm.getPassword());
+      userService.autoLogin(userForm.getUsername(), userForm.getPassword());
       return new ModelAndView("redirect:/index");
     } else {
-      userForm.setEmail(userForm.getEmail().toLowerCase());
+      userForm.setUsername(userForm.getUsername().toLowerCase());
       ModelAndView template = new ModelAndView("register", "registerUserForm", userForm);
       template.setStatus(HttpStatus.BAD_REQUEST);
       return template;

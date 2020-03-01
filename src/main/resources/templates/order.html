@@ -1,0 +1,124 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>订单</title>
+  <div th:replace="fragments/header"/>
+</head>
+<body>
+
+<div th:replace="fragments/navbar :: header('index')"/>
+<main role="main" class="container">
+  <div class="container">
+
+    <div style="margin-top:20px">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="widget box">
+                    <div class="widget-header row">
+                        <h4 class="col-sm-2">
+                            <i class="icon-reorder"></i> 订单列表
+                        </h4>
+                        <div class="col-sm-2  offset-sm-8">
+                            <a class="btn btn-primary " th:href="@{/add/order}">添加新商品</a>
+                        </div>
+                        <!-- <div class="toolbar no-padding">
+                            <div class="btn-group">
+                                <span class="btn btn-xs "><a
+                                    th:href="@{/admin/products/add}"><i class="icon-plus"></i></a></span>
+                            </div>
+                        </div> -->
+                    </div>
+                    <div class="widget-header">
+                    </div>
+                    <div class="table-responsive" style="margin-top: 1em;">
+                        <table id="grid-data"
+                               class="table  table-hover table-striped">
+                            <thead>
+                            <tr>
+                                <th data-column-id="id" data-type="numeric"
+                                    data-identifier="true">订单编号</th>
+                                <th data-column-id="id" data-type="numeric"
+                                    data-identifier="true">订单日期</th>
+                                <th data-column-id="datetime">购买商品</th>
+                                <th data-column-id="datetime">付款人</th>
+                                <th data-column-id="datetime">付款方式</th>
+                                <th data-column-id="datetime">商品总额</th>
+                                <th data-column-id="datetime">运费</th>
+                                <th data-column-id="datetime">优惠券</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="news : ${newslist}">
+                                <td th:text="${news.id}"></td>
+                                <td th:text="${news.title}"></td>
+                                <td><a th:href="@{/admin/news/edit(id=${news.id})}"
+                                       title="编辑"><i class="icon-edit"></i></a></td>
+                                <td><a th:href="@{/admin/news/del(id=${news.id})}"
+                                       title="删除"><i class="icon-trash visual red"
+                                                     onclick="return confirm('确定要删除吗?')"></i></a></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+    <script src="https://cdn.bootcss.com/echarts/4.4.0-rc.1/echarts.min.js"></script>
+</footer>
+</body>
+<script type="text/javascript">
+
+    $(function($){
+        //添加新型冠状病毒感染的肺炎疫情情况
+        var addNCIForm = $('#add-2019-nCoV-form');
+        //新型冠状病毒感染的肺炎疫情情况折线图推叠图
+        //获取form表单里所有input的name和placeholder
+        console.log(addNCIForm);
+
+
+        var addNCIFormArrays = addNCIForm.serializeArray();
+        console.log(addNCIFormArrays);
+        console.log(addNCIForm.serialize());
+        //点击添加一条新型冠状病毒感染的肺炎疫情情况
+        addNCIForm.submit(function (data) {
+
+            var addNCIObj = {};
+            var addNCIFormArray = addNCIForm.serializeArray();
+            $.each(addNCIFormArray, function() {
+
+                if(this.name =='date' || this.name == 'beforeDate'){
+                    addNCIObj[this.name] = new Date(this.value);
+                }else {
+                    addNCIObj[this.name] = this.value;
+                }
+            });
+            console.log(addNCIFormArray);
+            console.log(addNCIObj);
+
+            $.ajax({
+                async : false,
+                type : 'POST',
+                url : '/2019-nCoV',
+                data : JSON.stringify(addNCIObj),//400
+                contentType: "application/json;charset=utf-8",
+                success : function(expressResult) {
+                    alert('OK~');
+                    console.log(expressResult);
+                },
+                dataType : 'json'
+            });
+
+            return false;
+        });
+    })
+</script>
+</html>

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>Fancy blog!</title>
+  <title>NCP</title>
   <div th:replace="fragments/header"/>
 </head>
 <body>
@@ -16,10 +16,23 @@
     <div class="row" id="2019nCoV-new-confirmed-cases" style="height:400px;">
 
     </div>
+    <!--累计确诊病例(例)-全国-->
+    <div class="row" id="2019nCoV-cumulativeConfirmedCases-chart" style="height:400px;">
+
+    </div>
+    <!--密切接触者(人)-全国|疑似病例-全国|正在接受医学观察(人)-全国-->
+    <div class="row" id="2019nCoV-closeContactsSuspectedCaseWatching-chart" style="height:400px;">
+
+    </div>
 
     <div class="row" id="2019nCoV-new-deaths-chart" style="height:400px;">
 
     </div>
+    <!--港澳台通报确诊病例-->
+    <div class="row" id="2019nCoV-KongMacaoTai-chart" style="height:400px;">
+
+    </div>
+
 
 
   </div>
@@ -43,7 +56,16 @@
     window.drawChart('2019nCoV-new-confirmed-cases', '新增确诊病例', null,['newConfirmedCasesNationwide','newConfirmedCasesHuBei']);
 
     //新增重症病例(例) - 新增死亡病例(例)
-    window.drawChart('2019nCoV-new-deaths-chart', '新增重症/死亡病例', null,['newSevereCasesNationwide','newDeathsNationwide']);
+    window.drawChart('2019nCoV-new-deaths-chart', '死亡病例', null,['newDeathsNationwide','cumulativeDeaths']);
+    //港澳台通报确诊病例
+    window.drawChart('2019nCoV-KongMacaoTai-chart', '港澳台确诊病例', null,['cumulativeConfirmedCasesHongKong',
+      'cumulativeConfirmedCasesMacao','cumulativeConfirmedCasesTaiwan']);
+    //累计确诊病例(例)-全国
+    window.drawChart('2019nCoV-cumulativeConfirmedCases-chart', '累计确诊病例(例)-全国', null,['cumulativeConfirmedCases','severeCase']);
+
+    //密切接触者(人)-全国|疑似病例-全国|正在接受医学观察(人)-全国
+    window.drawChart('2019nCoV-closeContactsSuspectedCaseWatching-chart', '累计确诊病例(例)-全国', null,[
+            'closeContacts','suspectedCase','watching']);
 
   }
 

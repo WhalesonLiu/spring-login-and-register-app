@@ -18,7 +18,7 @@ public class RegisterUserForm {
   @NotBlank
   @Email
   @NotNull
-  private String email;
+  private String username;
 
   @NotBlank
   @NotEmpty

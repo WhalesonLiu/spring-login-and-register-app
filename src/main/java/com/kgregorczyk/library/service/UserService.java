@@ -7,7 +7,7 @@ public interface UserService extends UserDetailsService {
 
   User createBasicUser(User user);
 
-  User findByEmail(String email);
+  User findByUsername(String email);
 
   User getLoggedInUser();
 
