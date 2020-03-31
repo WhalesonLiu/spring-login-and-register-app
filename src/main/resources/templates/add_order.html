@@ -11,7 +11,7 @@
   <div class="container">
 
     <div style="margin-top:20px">
-        <form  id="add-2019-nCoV-form" autocomplete="off">
+        <form  id="add-order-form" autocomplete="off">
           <fieldset>
               <h3>订单信息</h3>
               <div th:if="${success}">
@@ -22,7 +22,7 @@
               </div>
 
 
-              <div class="form-group row">
+              <!--<div class="form-group row">
                   <label for="order-no" class="col-sm-2 col-form-label" >订单编号</label>
                   <div class="col-sm-3">
                       <input type="text"  class="form-control" id="order-no" autocapitalize="off" disabled >
@@ -33,58 +33,44 @@
                       <input type="text"  class="form-control" id="express-no" autocapitalize="off">
                   </div>
 
-              </div>
+              </div>-->
               <div class="form-group row">
                   <label for="weChatAccount" class="col-sm-2 col-form-label" >客户微信号</label>
                   <div class="col-sm-3">
-                      <input type="text"  class="form-control" id="weChatAccount" autocapitalize="off">
+                      <input type="text"  class="form-control" id="weChatAccount" autocapitalize="off" name="weChatAccount">
                   </div>
 
                   <label for="delivery-name" class="offset-sm-1 col-sm-2 col-form-label" >收货人姓名</label>
                   <div class="col-sm-3">
-                      <input type="text"  class="form-control" id="delivery-name" autocapitalize="off">
-                  </div>
-              </div>
+                      <select   class="form-control" id="delivery-name" name="deliveryId">
 
-              <div class="form-group row">
-                  <label for="express-company" class="col-sm-2 col-form-label" >快递公司</label>
-                  <div class="col-sm-3">
-                      <input type="text"  class="form-control" id="express-company" autocapitalize="off">
-                  </div>
-
-                  <label for="freight" class="offset-sm-1 col-sm-2 col-form-label" >运费</label>
-                  <div class="col-sm-3">
-                      <input type="number"  class="form-control" id="freight" autocapitalize="off" min="0" step="0.01">
-                  </div>
-              </div>
-
-              <div class="form-group row">
-                  <label class="col-sm-2 col-form-label" >优惠券</label>
-                  <div class="col-sm-3">
-                      <select class="form-control">
-                          <option value="0" selected="selected">无优惠券</option>
-                          <option value="1" >1元优惠券</option>
-                          <option value="2">2元优惠券</option>
-                          <option value="3">3元优惠券</option>
-                          <option value="4">4元优惠券</option>
-                          <option value="5">5元优惠券</option>
-                      </select>
-                  </div>
-                  <label for="discount" class="offset-sm-1 col-sm-2 col-form-label" >折扣</label>
-                  <div class="col-sm-3">
-                      <select id="discount" class="form-control">
-                          <option value="100%" selected="selected">不打折</option>
-                          <option value="98%">9.8折</option>
-                          <option value="95%">9.5折</option>
-                          <option value="90%">9折</option>
-                          <option value="88%">8.8折</option>
-                          <option value="85%">8.5折</option>
-                          <option value="80%">8折</option>
                       </select>
                   </div>
               </div>
 
               <div class="form-group row">
+                  <label for="is-pay" class=" col-sm-2 col-form-label" >付款</label>
+                  <div class="col-sm-3">
+                      <select   class="form-control" id="is-pay" name="isPay">
+                          <option value="true">已付款</option>
+                          <option value="false">未付款</option>
+                      </select>
+                  </div>
+
+                  <label for="order-status" class="offset-sm-1 col-sm-2 col-form-label" >订单状态</label>
+                  <div class="col-sm-3">
+                      <select   class="form-control" id="order-status" name="orderStatus">
+
+                          <option value="0">预定中</option>
+                          <option value="1">待录入</option>
+                          <option value="2">未发货</option>
+                          <option value="3">已发货</option>
+                          <option value="4">已签收</option>
+                          <option value="5">已好评</option>
+                          <option value="6">取消</option>
+                          <option value="9">完成</option>
+                      </select>
+                  </div>
               </div>
               <div class="form-group row">
                   <label for="remark" class=" col-sm-2 col-form-label" >备注</label>
@@ -95,15 +81,67 @@
               </div>
               <ul class="list-unstyled" id="order-commodity-list">
 
-                  <li class="form-group row">
-                      <label for="commodity-name-1" class="col-sm-2 col-form-label" >商品1名称</label>
-                      <div class="col-sm-3">
-                          <input type="text"  class="form-control" id="commodity-name-1" autocapitalize="off">
+                  <li class="form-group" style="border: 1px dashed #ced4da;">
+                      <div class="form-group  row pl-1" style="margin-top: 10px;">
+                          <label for="order-commodity" class="col-sm-2 col-form-label" >商品1名称</label>
+                          <div class="col-sm-3">
+                              <select id="order-commodity" class="form-control" name="commodityId1">
+                              </select>
+                          </div>
+                          <label for="commodity-num-1" class="offset-sm-1 col-sm-2 col-form-label" >数量</label>
+                          <div class="col-sm-3">
+                              <input type="number"  name="commodityNum1" class="form-control" id="commodity-num-1" autocapitalize="off" min="0" value="1" >
+                          </div>
                       </div>
-                      <label for="commodity-num-1" class="offset-sm-1 col-sm-1 col-form-label" >数量</label>
-                      <div class="col-sm-1">
-                          <input type="number"  class="form-control" id="commodity-num-1" autocapitalize="off" min="0" >
+                      <div class="form-group row pl-1">
+                          <label for="express-company" class="col-sm-2 col-form-label" >快递公司</label>
+                          <div class="col-sm-3">
+                              <input type="text"  class="form-control" id="express-company" autocapitalize="off" name="expressCompany1">
+                          </div>
+
+                          <label for="express-no" class="offset-sm-1 col-sm-2 col-form-label" >快递单号</label>
+                          <div class="col-sm-3">
+                              <input type="text"  class="form-control" id="express-no" autocapitalize="off" name="expressNo1">
+                          </div>
                       </div>
+                      <div class="form-group  row pl-1">
+                          <label for="freight-1" class="col-sm-2 col-form-label" >运费</label>
+                          <div class="col-sm-3">
+                              <input type="number" name="freight1" class="form-control" id="freight-1" autocapitalize="off" min="0" step="0.01">
+                          </div>
+                      </div>
+                      <div class=" form-group row pl-1">
+                          <label class="col-sm-2 col-form-label" >优惠券</label>
+                          <div class="col-sm-3">
+                              <select class="form-control" id="coupon1">
+                                  <option value="0" selected="selected">无优惠券</option>
+                                  <option value="1" >1元优惠券</option>
+                                  <option value="2">2元优惠券</option>
+                                  <option value="3">3元优惠券</option>
+                                  <option value="4">4元优惠券</option>
+                                  <option value="5">5元优惠券</option>
+                              </select>
+                          </div>
+                          <label for="discount1" class="offset-sm-1 col-sm-2 col-form-label" >折扣</label>
+                          <div class="col-sm-3">
+                              <select id="discount1" class="form-control">
+                                  <option value="100%" selected="selected">不打折</option>
+                                  <option value="98%">9.8折</option>
+                                  <option value="95%">9.5折</option>
+                                  <option value="90%">9折</option>
+                                  <option value="88%">8.8折</option>
+                                  <option value="85%">8.5折</option>
+                                  <option value="80%">8折</option>
+                              </select>
+                          </div>
+                      </div>
+                      <div class="form-group row pl-1">
+                          <label for="remark1" class=" col-sm-2 col-form-label" >备注</label>
+                          <div class="col-sm-8">
+                              <input type="text"  class="form-control" id="remark1" autocapitalize="off">
+                          </div>
+                      </div>
+
                   </li>
               </ul>
               <!--<div class="form-group row">
@@ -130,26 +168,135 @@
                       删除商品
                   </button>
               </div>
-            <div class="form-group row">
-              <input type="submit" id="NCoV-add-submit-btn" class="btn btn-lg btn-primary btn-block center-block col-lg-4 offset-lg-4" value="添加"/>
+            <div class="form-group row" style="height: 80px;">
+              <!--<input type="submit" id="NCoV-add-submit-btn" class="btn btn-lg btn-primary btn-block center-block col-lg-4 offset-lg-4" value="添加"/>-->
             </div>
+              <div class="fixed-bottom" style="background: #EEF0F4;height: 60px; opacity: 0.8;">
+                  <input type="submit" id="add-order" style="margin-right: 2em;" class="btn btn-primary float-right" value="添加"/>
+              </div>
           </fieldset>
         </form>
-    </div>
 
+        <!-- 添加订单后结果的Modal -->
+        <div class="modal fade" id="result-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">提示</h5>
+                        <button type="button" class="close close-modal" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="result-modal-info">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary close-modal">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
   </div>
 </main>
 
-<footer>
-    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+    <div th:replace="fragments/footer :: footer"/>
 
-    <script src="https://cdn.bootcss.com/echarts/4.4.0-rc.1/echarts.min.js"></script>
-    <script src="/common-util.js"></script>
-</footer>
 </body>
 <script type="text/javascript">
 
     $(function($){
+
+        var resultModalInfoObj = $('#result-modal-info');
+
+        var orderCommodityObj = $('#order-commodity');
+        var deliveryNameObj = $('#delivery-name');
+        var orderCommodityResult = window.ajax('GET','/commodity/all/list',{});
+
+        if(orderCommodityResult.responseType == 'N'){
+            $.each(orderCommodityResult.responseReplyInfo,function(){
+
+                var commodityOptionObj = $('<option value="' + this.commodityId + '"></option>').html(this.commodityName);
+                orderCommodityObj.append(commodityOptionObj);
+            });
+        }
+
+        var addOrderFormObj = $('#add-order-form');
+
+        var orderCommodityListObj = $('#order-commodity-list');
+
+        addOrderFormObj.submit(function(){
+            var addOrderFormArrays = addOrderFormObj.serializeArray();
+
+
+            var addOrderObj = {};
+            var orderCommodityArray = new Array();
+            $.each(addOrderFormArrays, function() {
+                addOrderObj[this.name] = this.value;
+
+            });
+
+            var orderCommodityLength = orderCommodityListObj.find('li').length;
+
+            for (var len = 1; len <= orderCommodityLength; len++) {
+
+                var commodityInfoObj = {};
+
+                //商品id
+                var commodityId = $('#order-commodity-list select[name = "commodityId'+ len +'"]').val();
+                commodityInfoObj.commodityId = commodityId;
+
+                //运费
+                var freight =  $('#order-commodity-list input[name = "freight'+ len +'"]').val();
+                commodityInfoObj.freight = freight;
+
+                //商品数量
+                var commodityNum = $('#order-commodity-list input[name = "commodityNum'+ len +'"]').val();
+                commodityInfoObj.commodityNum = commodityNum;
+
+                //快递公司
+                var expressCompany =  $('#order-commodity-list input[name = "expressCompany'+ len +'"]').val();
+                commodityInfoObj.expressCompany = expressCompany;
+
+                //快递单号
+                var expressNo =  $('#order-commodity-list input[name = "expressNo'+ len +'"]').val();
+                commodityInfoObj.expressNo = expressNo;
+
+                //优惠券
+                var coupon =  $('#order-commodity-list input[name = "coupon'+ len +'"]').val();
+                commodityInfoObj.coupon = coupon;
+
+                //折扣
+                var discount =  $('#order-commodity-list input[name = "discount'+ len +'"]').val();
+                commodityInfoObj.discount = discount;
+
+                orderCommodityArray.push(commodityInfoObj);
+
+            }
+            addOrderObj.commodities = orderCommodityArray;
+            console.log(addOrderObj);
+            var addOrderResult = window.ajax('POST','/order',addOrderObj);
+
+            resultModalInfoObj.html(addOrderResult.responseMessage);
+
+            console.log(addOrderResult);
+            if( addOrderResult.responseType == 'N'){
+
+                resultModalInfoObj.attr('data-flag',true);
+                resultModalInfoObj.attr('data-url','/order');
+            }else{
+                resultModalInfoObj.attr('data-flag',false);
+            }
+
+            $('#result-modal').modal('show');
+
+            return false;
+        });
+
+
         //添加商品
         $('#add-commodity').click(function () {
 
@@ -160,6 +307,19 @@
         $('#remove-commodity').click(function(){
             window.removeFunctionLine('commodity','#order-commodity-list','#remove-commodity-col');
         });
+        //获取收货人信息
+        $('#weChatAccount').blur(function () {
+            var deliveryResult = window.ajax('GET','/delivery',{weChatAccount: this.value});
+            if(deliveryResult.responseType == 'N'){
+                $.each(deliveryResult.responseReplyInfo,function(){
+
+                    var deliveryNameOptObj = $('<option value="' + this.infoId + '"></option>').html(this.deliveryName);
+                    deliveryNameObj.append(deliveryNameOptObj);
+                });
+            }
+        });
+
+
         //$(".index li:last").remove()
     })
 </script>

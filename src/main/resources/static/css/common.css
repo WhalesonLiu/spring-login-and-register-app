@@ -1,0 +1,20 @@
+@charset "utf-8";
+
+.bg-msg{
+    /*适中的春天的绿色*/
+    background: #00FF7F !important;
+}
+.bg-gold{
+    background: #FFF8DC;
+}
+.bg-cclt{
+    /*巧克力*/
+    background: #D2691E;
+}
+.bg-idr{
+    /*印度红*/
+    background: #CD5C5C;
+}
+.pointer{
+    cursor: pointer;
+}

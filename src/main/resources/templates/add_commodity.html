@@ -11,7 +11,7 @@
   <div class="container">
 
     <div style="margin-top:20px">
-        <form  id="add-2019-nCoV-form" autocomplete="off">
+        <form  id="add-commodity-form" autocomplete="off">
           <fieldset>
               <h3>添加商品</h3>
               <div th:if="${success}">
@@ -22,18 +22,16 @@
               </div>
 
               <div class="form-group row">
-                  <label class="col-sm-2 col-form-label" >商品类型</label>
+                  <label class="col-sm-2 col-form-label"  for="commodity-type">商品类型*</label>
                   <div class="col-sm-3">
-                      <select class="form-control">
-                          <option value="fresh-fruit" selected="selected">新鲜水果</option>
-                          <option value="vegetables">蔬菜米蛋</option>
-                          <option value="casual-snacks">休闲零食</option>
+                      <select class="form-control" id="commodity-type" name="commodityTypeId">
+
                       </select>
                   </div>
 
-                  <label for="commodity-name" class="offset-sm-1 col-sm-2 col-form-label" >商品名称</label>
+                  <label for="commodity-name" class="offset-sm-1 col-sm-2 col-form-label" >商品名称*</label>
                   <div class="col-sm-3">
-                      <input type="text"  class="form-control" id="commodity-name" autocapitalize="off">
+                      <input type="text"  class="form-control" name="commodityName" id="commodity-name" autocapitalize="off" required>
                   </div>
 
               </div>
@@ -42,31 +40,44 @@
               <div class="form-group row">
                   <label for="commodity-specifications" class="col-sm-2 col-form-label" >商品规格</label>
                   <div class="col-sm-3">
-                      <input type="text"  class="form-control" id="commodity-specifications" autocapitalize="off">
+                      <input type="text"  class="form-control" id="commodity-specifications" autocapitalize="off" name="commoditySpecifications">
                   </div>
 
                   <label for="origin-dispatch" class="offset-sm-1 col-sm-2 col-form-label" >产地/分发地</label>
                   <div class="col-sm-3">
-                      <input type="text"  class="form-control" id="origin-dispatch" autocapitalize="off">
+                      <input type="text"  class="form-control" id="origin-dispatch" autocapitalize="off" name="originDispatch">
                   </div>
 
               </div>
               <div class="form-group row">
                   <label for="original-price" class="col-sm-2 col-form-label" >成本价</label>
                   <div class="col-sm-3">
-                      <input type="number"  class="form-control" id="original-price" autocapitalize="off" min="0" step="0.01">
+                      <input type="number" name="costPrice" class="form-control" id="original-price" autocapitalize="off" min="0" step="0.01" >
                   </div>
 
-                  <label for="price" class="offset-sm-1 col-sm-2 col-form-label" >售价</label>
+                  <label for="price" class="offset-sm-1 col-sm-2 col-form-label" >售价*</label>
                   <div class="col-sm-3">
-                      <input type="number"  class="form-control" id="price" autocapitalize="off" min="0" step="0.01">
+                      <input type="number"  class="form-control" id="price" autocapitalize="off" min="0" step="0.01" name="commodityPrice" required>
+                  </div>
+              </div>
+              <div class="form-group row">
+                  <label for="freight" class="col-sm-2 col-form-label" >运费</label>
+                  <div class="col-sm-3">
+                      <input type="number" name="costPrice" class="form-control" id="freight" autocapitalize="off" min="0" step="0.01" >
+                  </div>
+              </div>
+              <div class="form-group row">
+
+                  <label for="commodity-desc" class="col-sm-2 col-form-label" >商品图片</label>
+                  <div class="col-sm-8">
+                      <input  type="url" class="form-control" id="commodity-url" autocapitalize="off" name="commodityUrl"/>
                   </div>
               </div>
               <div class="form-group row">
 
                   <label for="commodity-desc" class="col-sm-2 col-form-label" >商品描述</label>
                   <div class="col-sm-8">
-                      <textarea  class="form-control" id="commodity-desc" autocapitalize="off"></textarea>
+                      <textarea  class="form-control" id="commodity-desc" autocapitalize="off" name="commodityDesc"></textarea>
                   </div>
               </div>
 
@@ -74,7 +85,7 @@
 
                   <label for="express-company" class="col-sm-2 col-form-label" >快递公司</label>
                   <div class="col-sm-8">
-                      <input type="text"  class="form-control" id="express-company" autocapitalize="off">
+                      <input type="text"  class="form-control" id="express-company" autocapitalize="off" name="expressCompany">
                   </div>
               </div>
 
@@ -82,7 +93,7 @@
                   <label for="comments" class=" col-sm-2 col-form-label" >说明</label>
 
                   <div class="col-sm-8">
-                      <textarea  class="form-control" id="comments" autocapitalize="off"></textarea>
+                      <textarea  class="form-control" id="comments" autocapitalize="off" name="comments"></textarea>
                   </div>
               </div>
 
@@ -91,6 +102,27 @@
             </div>
           </fieldset>
         </form>
+
+        <!-- 添加商品类型后结果的Modal -->
+        <div class="modal fade" id="result-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">提示</h5>
+                        <button type="button" class="close close-modal" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="result-modal-info">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary close-modal">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
   </div>
@@ -99,53 +131,59 @@
 <footer>
     <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
 
-    <script src="https://cdn.bootcss.com/echarts/4.4.0-rc.1/echarts.min.js"></script>
+    <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.js"></script>
+
+    <script src="/js/common-util.js"></script>
+
 </footer>
 </body>
 <script type="text/javascript">
 
     $(function($){
-        //添加新型冠状病毒感染的肺炎疫情情况
-        var addNCIForm = $('#add-2019-nCoV-form');
-        //新型冠状病毒感染的肺炎疫情情况折线图推叠图
-        //获取form表单里所有input的name和placeholder
-        console.log(addNCIForm);
 
+        var commodityTypeObj = $('#commodity-type');
+        var addCommodityFormObj = $('#add-commodity-form');
+        var resultModalInfoObj = $('#result-modal-info');
 
-        var addNCIFormArrays = addNCIForm.serializeArray();
-        console.log(addNCIFormArrays);
-        console.log(addNCIForm.serialize());
-        //点击添加一条新型冠状病毒感染的肺炎疫情情况
-        addNCIForm.submit(function (data) {
+        //显示商品类型
+        var commodityResultList = window.ajax('GET','/commodity/type/list', {page:0,size:100});
 
-            var addNCIObj = {};
-            var addNCIFormArray = addNCIForm.serializeArray();
-            $.each(addNCIFormArray, function() {
+        if(commodityResultList.responseType == 'N'
+            && commodityResultList.responseReplyInfo.content != null){
+            $.each(commodityResultList.responseReplyInfo.content,function  (){
 
-                if(this.name =='date' || this.name == 'beforeDate'){
-                    addNCIObj[this.name] = new Date(this.value);
-                }else {
-                    addNCIObj[this.name] = this.value;
-                }
+                var optionObj = $('<option value="' + this.commodityId + '"></option>').html(this.commodityName);
+                commodityTypeObj.append(optionObj);
+
             });
-            console.log(addNCIFormArray);
-            console.log(addNCIObj);
+        }
 
-            $.ajax({
-                async : false,
-                type : 'POST',
-                url : '/2019-nCoV',
-                data : JSON.stringify(addNCIObj),//400
-                contentType: "application/json;charset=utf-8",
-                success : function(expressResult) {
-                    alert('OK~');
-                    console.log(expressResult);
-                },
-                dataType : 'json'
+        //添加商品
+        addCommodityFormObj.submit(function(){
+            var commodityFormValue = addCommodityFormObj.serializeArray();
+            var addcommodity = {};
+            $.each(commodityFormValue,function(){
+                addcommodity[this.name] = this.value;
             });
+            console.log(addcommodity);
+            var result = window.ajax('POST','/commodity', addcommodity);
+
+            resultModalInfoObj.html(result.responseMessage);
+
+            console.log(result);
+            if( result.responseType == 'N'){
+
+                resultModalInfoObj.attr('data-flag',true);
+                resultModalInfoObj.attr('data-url','/commodity');
+            }else{
+                resultModalInfoObj.attr('data-flag',false);
+            }
+
+            $('#result-modal').modal('show');
 
             return false;
         });
-    })
+
+    });
 </script>
 </html>

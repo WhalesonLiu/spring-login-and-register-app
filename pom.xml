@@ -4,12 +4,12 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.kgregorczyk.library</groupId>
-  <artifactId>library</artifactId>
+  <groupId>com.caroline.fruit</groupId>
+  <artifactId>fruit</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>library</name>
+  <name>fruit</name>
   <description>Demo project for Spring Boot</description>
 
   <parent>
@@ -66,11 +66,18 @@
     <!--https://blog.csdn.net/w1014074794/article/details/88827946-->
     <!--优先使用Lettuce，如果需要分布式锁，分布式集合等分布式的高级特性，
     添加Redisson结合使用，因为Redisson本身对字符串的操作支持很差。-->
-    <dependency>
+    <!--<dependency>
       <groupId>io.lettuce</groupId>
       <artifactId>lettuce-core</artifactId>
       <version>5.0.4.RELEASE</version>
+    </dependency>-->
+    <!-- https://mvnrepository.com/artifact/io.lettuce/lettuce-core -->
+    <dependency>
+      <groupId>io.lettuce</groupId>
+      <artifactId>lettuce-core</artifactId>
+      <version>5.2.1.RELEASE</version>
     </dependency>
+
     <dependency>
       <groupId>org.thymeleaf.extras</groupId>
       <artifactId>thymeleaf-extras-springsecurity4</artifactId>

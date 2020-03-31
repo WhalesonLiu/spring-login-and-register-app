@@ -11,7 +11,7 @@
   <div class="container">
 
     <div style="margin-top:20px">
-        <form  id="add-2019-nCoV-form" autocomplete="off">
+        <form  id="add-user-form" autocomplete="off">
           <fieldset>
               <h3>基本信息</h3>
               <div th:if="${success}">
@@ -24,13 +24,13 @@
               <div class="form-group row">
                   <label for="real-name" class="col-sm-2 col-form-label" >姓名</label>
                   <div class="col-sm-3">
-                      <input type="text"  class="form-control" id="real-name" autocomplete="off">
+                      <input type="text"  class="form-control" id="real-name" autocomplete="off" name="realName">
                   </div>
 
-                  <label class="offset-sm-1 col-sm-2 control-label">性别:</label>
+                  <label class="offset-sm-1 col-sm-2 control-label" >性别:</label>
                   <div class="col-md-3">
-                      <select class="form-control">
-                          <option value="male" selected="selected">男</option>
+                      <select class="form-control" name="gender">
+                          <option value="male" selected="selected" >男</option>
                           <option value="female">女</option>
                       </select>
                   </div>
@@ -38,41 +38,44 @@
               <div class="form-group row">
                   <label for="weChatAccount" class="col-sm-2 col-form-label" >微信号</label>
                   <div class="col-sm-3">
-                      <input type="text"  class="form-control" id="weChatAccount" autocomplete="off" required>
+                      <input type="text"  class="form-control" id="weChatAccount" autocomplete="off" name="weChatAccount">
                   </div>
 
                   <label for="weChatName" class="offset-sm-1 col-sm-2 col-form-label" >微信昵称</label>
                   <div class="col-sm-3">
-                      <input type="text"  class="form-control" id="weChatName" autocomplete="off">
+                      <input type="text"  class="form-control" id="weChatName" autocomplete="off" name="weChatName">
                   </div>
               </div>
               <div class="form-group row">
-                  <label for="joinDate" class=" col-sm-2 col-form-label" >生日</label>
+                  <label for="birthDay" class=" col-sm-2 col-form-label" >生日</label>
 
                   <div class="col-sm-3">
-                      <input type="date"  class="form-control" id="joinDate" autocomplete="off">
+                      <input type="date"  class="form-control" id="birthDay" autocomplete="off" name="birthDay">
                   </div>
               </div>
               <div class="form-group row">
                   <label for="userRemark" class=" col-sm-2 col-form-label" >用户备注信息</label>
 
                   <div class="col-sm-8">
-                      <textarea id="userRemark" class="form-control" autocomplete="off"></textarea>
+                      <textarea id="userRemark" class="form-control" autocomplete="off" name="userRemark"></textarea>
                   </div>
               </div>
               <h3>收货信息</h3>
               <ul class="list-unstyled" id="delivery-info-list">
                   <li  style="border: 1px dashed #ced4da;">
                       <div class="form-group row" style="margin-top: 10px;">
+
+                          <input type="hidden"  class="form-control" name="deliveryIndex1" value="1" autocomplete="off">
+
                           <label for="deliveryName" class=" col-sm-2 col-form-label" >&nbsp;&nbsp;&nbsp;&nbsp;收货人姓名</label>
 
                           <div class="col-sm-3">
-                              <input type="text"  class="form-control" id="deliveryName" autocomplete="off">
+                              <input type="text"  class="form-control" id="deliveryName" autocomplete="off" name="deliveryName1">
                           </div>
 
                           <label for="phoneNumber" class="offset-sm-1 col-sm-2 col-form-label" >&nbsp;&nbsp;&nbsp;&nbsp;收货人手机号</label>
                           <div class="col-sm-3">
-                              <input type="text"  class="form-control" id="phoneNumber" autocomplete="off">
+                              <input type="text"  class="form-control" id="phoneNumber" autocomplete="off" name="phoneNumber1">
                           </div>
                       </div>
 
@@ -80,7 +83,7 @@
                           <label for="deliveryAddress" class=" col-sm-2 col-form-label" >&nbsp;&nbsp;&nbsp;&nbsp;收货人地址</label>
 
                           <div class="col-sm-8">
-                              <input type="text"  class="form-control" id="deliveryAddress" autocomplete="off">
+                              <input type="text"  class="form-control" id="deliveryAddress" name="deliveryAddress1" autocomplete="off">
                           </div>
                       </div>
 
@@ -88,7 +91,7 @@
                           <label for="remark" class=" col-sm-2 col-form-label" >&nbsp;&nbsp;&nbsp;&nbsp;备注</label>
 
                           <div class="col-sm-8">
-                              <textarea  class="form-control" id="remark" autocomplete="off"></textarea>
+                              <textarea  class="form-control" id="remark" autocomplete="off" name="deliveryRemark1"></textarea>
                           </div>
                       </div>
                   </li>
@@ -112,23 +115,139 @@
             </div>
           </fieldset>
         </form>
+
+        <!-- 添加用户后结果的Modal -->
+        <div class="modal fade" id="add-user-result-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">提示</h5>
+                        <button type="button" class="close close-modal" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="add-user-result-info">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary close-modal">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
     </div>
 
   </div>
 </main>
 
-<footer>
-    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
 
-    <script src="https://cdn.bootcss.com/echarts/4.4.0-rc.1/echarts.min.js"></script>
+    <footer>
+        <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
 
-    <script src="/common-util.js"></script>
-
-</footer>
+        <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.js"></script>
+        <script src="/js/common-util.js"></script>
+    </footer>
 </body>
 <script type="text/javascript">
 
     $(function($){
+
+        var addUserForm  = $('#add-user-form');
+
+        var deliveryInfoListObj = $('#delivery-info-list');
+
+        var addUserResultInfoObj = $('#add-user-result-info');
+
+        var addUserResultModal = $('#add-user-result-modal');
+
+        //添加用户
+        addUserForm.submit(function(){
+            var addUserFormArrays = addUserForm.serializeArray();
+            console.log(addUserFormArrays);
+
+            var addUserObj = {};
+            var deliveryInfoArrays = new Array();
+            $.each(addUserFormArrays, function() {
+
+                if( this.name.startsWith('deliveryName') || this.name.startsWith('phoneNumber') ||
+                this.name.startsWith('deliveryAddress')  || this.name.startsWith('deliveryRemark') ||
+                this.name.startsWith('deliveryIndex')){
+
+                }else if( this.name == 'birthDay'){
+                    addUserObj[this.name] = new Date(this.value);
+                }else{
+                    addUserObj[this.name] = this.value;
+                }
+            });
+
+            var deliveryInfoListLength = deliveryInfoListObj.find('li').length;
+
+            for (var len = 1; len <= deliveryInfoListLength; len++){
+
+                var deliveryInfoObj = {};
+
+                //收货人序号
+                var deliveryIndex = $('#delivery-info-list input[name = "deliveryIndex'+ len +'"]').val();
+                //收货人姓名
+                var deliveryName = $('#delivery-info-list input[name = "deliveryName'+ len +'"]').val();
+                //收货人手机号
+                var phoneNumber = $('#delivery-info-list input[name = "phoneNumber'+ len +'"]').val();
+                //收货人地址
+                var deliveryAddress = $('#delivery-info-list input[name = "deliveryAddress'+ len +'"]').val();
+                //收货人备注信息
+                var deliveryRemark = $('#delivery-info-list textarea[name = "deliveryRemark'+ len +'"]').val();
+
+                if(deliveryName != null && deliveryName.trim() !=''){
+                    deliveryInfoObj.deliveryIndex = deliveryIndex;
+                    deliveryInfoObj.deliveryName = deliveryName;
+                    deliveryInfoObj.phoneNumber = phoneNumber;
+                    deliveryInfoObj.deliveryAddress = deliveryAddress;
+                    deliveryInfoObj.deliveryRemark = deliveryRemark;
+                    deliveryInfoArrays.push(deliveryInfoObj);
+                }
+
+            }
+            addUserObj.deliveryInfoList = deliveryInfoArrays;
+            console.log(addUserObj);
+            $.ajax({
+                async : false,
+                type : 'POST',
+                url : '/add/user',
+                data : JSON.stringify(addUserObj),//400
+                contentType: "application/json;charset=utf-8",
+                success : function(result) {
+
+                    addUserResultInfoObj.html( result.responseMessage);
+
+                    if(result.responseType == 'N'){
+
+                        addUserResultInfoObj.attr('data-flag',true);
+                    }else{
+                        addUserResultInfoObj.attr('data-flag',false);
+                    }
+
+                    $('#add-user-result-modal').modal('show');
+                },
+                dataType : 'json'
+            });
+            return false;
+        });
+
+
+        //关闭添加用户的模态框
+        $('.close-modal').click(function(){
+
+            $('#add-user-result-modal').modal('hide');
+
+            var addFlag = addUserResultInfoObj.attr('data-flag');
+            if(addFlag){
+                window.location.href ='/user';
+            }
+        });
+
         //添加地址信息
         $('#add-address').click(function(){
 
@@ -138,7 +257,7 @@
         //删除地址信息
         $('#remove-address').click(function(){
 
-            window.removeFunctionLine('user','#delivery-info-list','#remove-commodity-col');
+            window.removeFunctionLine('user','#delivery-info-list','#remove-address-col');
 
         });
 

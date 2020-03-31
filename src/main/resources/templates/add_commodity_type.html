@@ -11,7 +11,7 @@
   <div class="container">
 
     <div style="margin-top:20px">
-        <form  id="add-2019-nCoV-form" autocomplete="off">
+        <form  id="add-commodity-type-form" autocomplete="off">
           <fieldset>
               <h3>添加商品类型</h3>
               <div th:if="${success}">
@@ -24,7 +24,7 @@
               <div class="form-group row">
                   <label for="commodity-type-name" class="col-sm-2 col-form-label" >商品类型名称</label>
                   <div class="col-sm-3">
-                          <input type="text"  class="form-control" id="commodity-type-name" autocapitalize="off" required>
+                          <input type="text"  class="form-control" id="commodity-type-name" name = "commodityTypeName" autocapitalize="off" required>
                   </div>
               </div>
 
@@ -37,10 +37,31 @@
                   </div>
               </div>
             <div class="form-group row">
-              <input type="submit" id="NCoV-add-submit-btn" class="btn btn-lg btn-primary btn-block center-block col-lg-4 offset-lg-4" value="添加"/>
+              <input type="submit" id="add-commodity-type-btn" class="btn btn-lg btn-primary btn-block center-block col-lg-4 offset-lg-4" value="添加"/>
             </div>
           </fieldset>
         </form>
+
+        <!-- 添加商品类型后结果的Modal -->
+        <div class="modal fade" id="result-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">提示</h5>
+                        <button type="button" class="close close-modal" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="result-modal-info">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary close-modal">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
   </div>
@@ -49,53 +70,43 @@
 <footer>
     <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
 
-    <script src="https://cdn.bootcss.com/echarts/4.4.0-rc.1/echarts.min.js"></script>
+    <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.js"></script>
+    <script src="/js/common-util.js"></script>
 </footer>
 </body>
 <script type="text/javascript">
 
     $(function($){
-        //添加新型冠状病毒感染的肺炎疫情情况
-        var addNCIForm = $('#add-2019-nCoV-form');
-        //新型冠状病毒感染的肺炎疫情情况折线图推叠图
-        //获取form表单里所有input的name和placeholder
-        console.log(addNCIForm);
 
+        var addCommodityTypeForm = $('#add-commodity-type-form');
 
-        var addNCIFormArrays = addNCIForm.serializeArray();
-        console.log(addNCIFormArrays);
-        console.log(addNCIForm.serialize());
-        //点击添加一条新型冠状病毒感染的肺炎疫情情况
-        addNCIForm.submit(function (data) {
+        var addCommodityTypeInfoObj = $('#result-modal-info');
 
-            var addNCIObj = {};
-            var addNCIFormArray = addNCIForm.serializeArray();
-            $.each(addNCIFormArray, function() {
+        //提交新增商品类型
+        addCommodityTypeForm.submit(function(){
 
-                if(this.name =='date' || this.name == 'beforeDate'){
-                    addNCIObj[this.name] = new Date(this.value);
-                }else {
-                    addNCIObj[this.name] = this.value;
-                }
-            });
-            console.log(addNCIFormArray);
-            console.log(addNCIObj);
+            var commodityTypeObj = {};
+            $.each(addCommodityTypeForm.serializeArray(),function(){
 
-            $.ajax({
-                async : false,
-                type : 'POST',
-                url : '/2019-nCoV',
-                data : JSON.stringify(addNCIObj),//400
-                contentType: "application/json;charset=utf-8",
-                success : function(expressResult) {
-                    alert('OK~');
-                    console.log(expressResult);
-                },
-                dataType : 'json'
+                commodityTypeObj[this.name] = this.value;
+
             });
 
+            var result = window.ajax('POST','/commodity/type/add', commodityTypeObj);
+
+            console.log(result);
+            if( result.responseType == 'N'){
+                addCommodityTypeInfoObj.html('商品分类信息添加成功');
+                addCommodityTypeInfoObj.attr('data-flag',true);
+                addCommodityTypeInfoObj.attr('data-url','/commodity');
+            }else{
+                addCommodityTypeInfoObj.html('商品分类信息添加失败');
+                addCommodityTypeInfoObj.attr('data-flag',false);
+            }
+            $('#result-modal').modal('show');
             return false;
         });
-    })
+
+    });
 </script>
 </html>

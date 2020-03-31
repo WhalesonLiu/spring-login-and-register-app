@@ -57,6 +57,8 @@
     <div class="row" id="commodity-sale-chart" style="height:400px;">
 
     </div>
+    <input type="file" id="file">
+    <button id="submit-file">提交</button>
 
   </div>
 </main>
@@ -68,15 +70,24 @@
 
   <script src="https://cdn.bootcss.com/echarts/4.4.0-rc.1/echarts.min.js"></script>
 
-  <script src="/common-util.js"></script>
+  <script src="/js/common-util.js"></script>
 </footer>
 </body>
 <script type="text/javascript">
 
   window.onload = function(){
 
+    $('#submit-file').click(function () {
+      var file = $(":file");
+      var reader = new FileReader();
+      reader.readAsText(file);
+      reader.onload = function () {
+        var ss = this.result.split("\r\n")[1].split(",")[0];
+      }
+    });
+
     //新增确诊病例
-    window.drawChart('commodity-sale-chart', '最近一周销售量前三的产品', null,['closeContacts','suspectedCase','watching']);
+    //window.drawChart('commodity-sale-chart', '最近一周销售量前三的产品', null,['closeContacts','suspectedCase','watching']);
 
   }
 

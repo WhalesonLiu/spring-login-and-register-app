@@ -12,6 +12,8 @@
     <div class="starter-template">
       <h3>新型冠状病毒感染的肺炎疫情情况</h3>
     </div>
+    <input type="file" id="file">
+    <button id="submit-file">提交</button>
     <!-- 新增确诊病例-->
     <div class="row" id="2019nCoV-new-confirmed-cases" style="height:400px;">
 
@@ -34,7 +36,6 @@
     </div>
 
 
-
   </div>
 </main>
 
@@ -45,27 +46,19 @@
 
   <script src="https://cdn.bootcss.com/echarts/4.4.0-rc.1/echarts.min.js"></script>
 
-  <script src="/2019-nCoV.js"></script>
 </footer>
 </body>
 <script type="text/javascript">
 
   window.onload = function(){
-
-    //新增确诊病例
-    window.drawChart('2019nCoV-new-confirmed-cases', '新增确诊病例', null,['newConfirmedCasesNationwide','newConfirmedCasesHuBei']);
-
-    //新增重症病例(例) - 新增死亡病例(例)
-    window.drawChart('2019nCoV-new-deaths-chart', '死亡病例', null,['newDeathsNationwide','cumulativeDeaths']);
-    //港澳台通报确诊病例
-    window.drawChart('2019nCoV-KongMacaoTai-chart', '港澳台确诊病例', null,['cumulativeConfirmedCasesHongKong',
-      'cumulativeConfirmedCasesMacao','cumulativeConfirmedCasesTaiwan']);
-    //累计确诊病例(例)-全国
-    window.drawChart('2019nCoV-cumulativeConfirmedCases-chart', '累计确诊病例(例)-全国', null,['cumulativeConfirmedCases','severeCase']);
-
-    //密切接触者(人)-全国|疑似病例-全国|正在接受医学观察(人)-全国
-    window.drawChart('2019nCoV-closeContactsSuspectedCaseWatching-chart', '累计确诊病例(例)-全国', null,[
-            'closeContacts','suspectedCase','watching']);
+    $('#submit-file').click(function () {
+      var file = $('#file').files[0];
+      var reader = new FileReader();
+      reader.readAsText(file);
+      reader.onload = function () {
+        var ss = this.result.split("\r\n")[1].split(",")[0];
+      }
+    });
 
   }
 
