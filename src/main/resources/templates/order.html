@@ -36,12 +36,11 @@
                             <tr class="text-center" style="white-space:nowrap">
                                 <th >订单编号</th>
                                 <th >订单日期</th>
-                                <th >购买商品</th>
+                                <th >商品</th>
                                 <th >付款人</th>
-                                <th >付款方式</th>
+                                <th >收货人</th>
                                 <th >商品总额</th>
-                                <th >运费</th>
-                                <th >优惠券</th>
+                                <th >订单状态</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -49,7 +48,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <nav aria-label="Page navigation example" id="pagination-list" data-url="/user/list" data-page-name="user">
+                    <nav aria-label="Page navigation example" id="pagination-list" data-url="/order/list" data-page-name="order">
                         <div class="clearfix ">
                             <div class="float-right page-info">第1页/共-页(共-条)</div>
                         </div>
@@ -80,6 +79,10 @@
 <script type="text/javascript">
 
     $(function($){
+
+        var orderList = window.ajax('GET','/order/list', {page:0,size : 5});
+
+        window.drawOrderTableList(orderList);
 
     });
 </script>

@@ -11,6 +11,7 @@ import com.caroline.fruit.repository.OrderCommodityRepository;
 import com.caroline.fruit.repository.OrderRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -165,10 +166,20 @@ public class OrderServiceImpl implements OrderService {
     public Result findAllOrderListByPageable(PageRequest pageRequest) throws FruitException {
         try {
 
+            Result result = new Result();
+            Page<Order> orders =  orderRepository.findAll(pageRequest);
+
+            if( orders != null && orders.getContent() != null){
+
+                result.setResponseReplyInfo(orders);
+
+                return result;
+            }else {
+                throw new FruitException(FruitMsgEnum.NotFoundOrderList);
+            }
         }catch (Exception e){
             throw new FruitException(FruitMsgEnum.Exception);
         }
-        return null;
     }
 
 

@@ -398,6 +398,10 @@
             window.drawUserTableList(result);
         }else if(pageName == 'commodity'){
             window.drawCommodityTableList(result);
+        }else if(pageName == 'order'){
+            window.drawOrderTableList(result);
+        }else{
+
         }
 
     });
@@ -505,5 +509,69 @@
 
     };
     window.drawCommodityTableList = drawCommodityTableList;
+
+
+    var drawOrderTableList = function (result) {
+        var listTableObj = $('#list-table tbody');
+
+        if(result.responseType == 'N' && result.responseReplyInfo != null) {
+            listTableObj.empty();
+            var listContent = result.responseReplyInfo.content;
+            listContent.forEach(function (element, index) {
+                var trObj = $('<tr></tr>');
+
+                trObj.attr('data-id', element.orderId);
+                trObj.attr('data-url', '/commodity/detail');
+                trObj.addClass('pointer');
+
+                //订单编号
+                var orderIdTd = $('<td></td>').html(element.orderId);
+                trObj.append(orderIdTd);
+
+
+                //订单日期
+                var creationDateTd = $('<td></td>').html(getFormatDate(element.orderCreationDate));
+                trObj.append(creationDateTd);
+
+                //商品
+                var commodityTd = $('<td></td>').html(
+                    element.commodityName + '*' + element.commodityNum);
+                trObj.append(commodityTd);
+
+                //付款人
+                var payerNameTd = $('<td></td>').html(element.payerName);
+                trObj.append(payerNameTd);
+                //收货人
+                var deliveryNameTd = $('<td></td>').html(element.deliveryName);
+                trObj.append(deliveryNameTd);
+
+                //商品总额
+                var orderTotalPriceTd = $('<td></td>').html(element.orderTotalPrice);
+                trObj.append(orderTotalPriceTd);
+
+                //订单状态
+                var orderStatusTd = $('<td></td>').html(element.orderStatus);
+                trObj.append(orderStatusTd);
+
+                /*//付款方式*/
+                listTableObj.append(trObj);
+            });
+            window.showPageNo(result.responseReplyInfo);
+        }
+    }
+    window.drawOrderTableList = drawOrderTableList;
+
+    /**
+     * 格式化日期yyyy-MM-dd
+     * **/
+    var getFormatDate = function (datetime) {
+        datetime = new Date(datetime);
+        var year = datetime.getFullYear();
+        var month = datetime.getMonth() + 1 < 10 ? "0" + (datetime.getMonth() + 1) :
+            datetime.getMonth() + 1;
+        var date = datetime.getDate() < 10 ? "0" + datetime.getDate() : datetime.getDate();
+        return year + '-' + month + '-'+ date;
+    }
+    window.getFormatDate = getFormatDate;
 
 })(window);

@@ -49,7 +49,9 @@ public enum FruitMsgEnum {
 
     AddUserCouponSuccess("00019","添加或更新用户优惠券成功"),
 
-    AddOrderSuccess("00020","添加订单成功");
+    AddOrderSuccess("00020","添加订单成功"),
+
+    NotFoundOrderList("00021","没有获取到订单列表");
 
 
     private String responseCode;

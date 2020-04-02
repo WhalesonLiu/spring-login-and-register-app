@@ -10,30 +10,31 @@ public class OrderStatus {
      * */
     public enum OrderStatusEnum{
 
-        SCHEDULED(0),//预定中
+        SCHEDULED(0, "预定中"),//预定中
 
-        PENDING_ENTRY(1),//待录入
+        PENDING_ENTRY(1, "待录入"),//待录入
 
-        NOT_SHIPPED(2),// 未发货
+        NOT_SHIPPED(2, "未发货"),// 未发货
 
-        SHIPPED(3),//已发货
+        SHIPPED(3, "已发货"),//已发货
 
-        RECEIVED(4),//已签收
+        RECEIVED(4, "已签收"),//已签收
 
-        PRAISED(5),//已好评
+        PRAISED(5, "已好评"),//已好评
 
-        CANCEL(6),//取消
+        CANCEL(6, "取消"),//取消
 
-        FINISH(9),//完成
+        FINISH(9, "完成"),//完成
 
-        REFUNDED(20),//已退款
+        REFUNDED(20, "已退款"),//已退款
 
-        PENDING(21),//待处理
+        PENDING(21, "待处理"),//待处理
 
-        PROCESSING(22);//处理中
+        PROCESSING(22, "处理中");//处理中
 
-        OrderStatusEnum(Integer status) {
+        OrderStatusEnum(Integer status,String message) {
             this.status = status;
+            this.message = message;
         }
 
         public static OrderStatusEnum getOrderStatus(Integer status){
@@ -46,6 +47,25 @@ public class OrderStatus {
             }
             return null;
         }
+        public static  String getOrderMessage(Integer status){
+            for (OrderStatusEnum orderStatus :  values()) {
+
+                if(orderStatus.getStatus() == status){
+                    return orderStatus.getMessage();
+                }
+
+            }
+            return null;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
+
         public Integer getStatus() {
             return status;
         }
@@ -55,6 +75,8 @@ public class OrderStatus {
         }
 
         private Integer status;
+
+        private String message;
 
     }
 
