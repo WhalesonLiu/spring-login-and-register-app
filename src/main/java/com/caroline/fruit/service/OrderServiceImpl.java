@@ -7,6 +7,10 @@ import com.caroline.fruit.exception.FruitException;
 import com.caroline.fruit.exception.FruitMsgEnum;
 import com.caroline.fruit.message.Result;
 import com.caroline.fruit.model.*;
+import com.caroline.fruit.model.express.OrderTracking;
+import com.caroline.fruit.projection.OrderExpressInfo;
+import com.caroline.fruit.projection.OrderList;
+import com.caroline.fruit.repository.ExpressInfoRepository;
 import com.caroline.fruit.repository.OrderCommodityRepository;
 import com.caroline.fruit.repository.OrderRepository;
 import org.springframework.beans.BeanUtils;
@@ -15,8 +19,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class OrderServiceImpl implements OrderService {
@@ -36,22 +44,29 @@ public class OrderServiceImpl implements OrderService {
 
     public final FruitUtil fruitUtil;
 
+    private final RestTemplate restTemplate;
+
+    private final ExpressInfoRepository expressInfoRepository;
+
     @Autowired
     public OrderServiceImpl(OrderRepository orderRepository,
                             OrderCommodityRepository orderCommodityRepository,
+                            ExpressInfoRepository expressInfoRepository,
                             DeliveryInfoService deliveryInfoService,
                             CouponFlowService couponFlowService,
                             CommodityService commodityService,
-                            FruitUtil fruitUtil,
-                            UserService userService){
-        this.orderRepository = orderRepository;
-        this.orderCommodityRepository = orderCommodityRepository;
-        this.deliveryInfoService = deliveryInfoService;
-        this.couponFlowService = couponFlowService;
+                            RestTemplate restTemplate,
+                            UserService userService,
+                            FruitUtil fruitUtil){
         this.fruitUtil = fruitUtil;
         this.userService = userService;
-
+        this.restTemplate = restTemplate;
+        this.orderRepository = orderRepository;
         this.commodityService = commodityService;
+        this.couponFlowService = couponFlowService;
+        this.deliveryInfoService = deliveryInfoService;
+        this.expressInfoRepository = expressInfoRepository;
+        this.orderCommodityRepository = orderCommodityRepository;
     }
 
     @Transactional
@@ -101,7 +116,36 @@ public class OrderServiceImpl implements OrderService {
                     orderCommodity.setOrderCommodityId(FruitUtil.getId());
                     //订单设置id
                     order.setOrderId(fruitUtil.getOrderNo());
+
                     BeanUtils.copyProperties(addOrderCommodityForm, orderCommodity);
+
+                    if( !StringUtils.isEmpty(addOrderCommodityForm.getExpressNo())){
+
+                        List<String> expressNoList =
+                                fruitUtil.stringToList(addOrderCommodityForm.getExpressNo(),";");
+
+                        List<ExpressInfo> expressInfos = new ArrayList<>();
+
+                        //该订单的快递信息
+                        expressNoList.forEach(e -> {
+                            ExpressInfo expressInfo = new ExpressInfo();
+                            expressInfo.setExpressInfoId(fruitUtil.getTableId());
+
+                            //设置快递公司名称
+                            expressInfo.setExpressCompany(
+                                    addOrderCommodityForm.getExpressCompany());
+
+                            //设置快递单号
+                            expressInfo.setExpressNo(
+                                    e);
+
+                            expressInfos.add(expressInfo);
+                        });
+
+                        //设置该订单的快递信息
+                        orderCommodity.setExpressInfo(expressInfos);
+
+                    }
                     //查询该用户是否有该优惠券
                     /*if(addOrderCommodityForm.getFreight() != null){
                         orderCommodity.setFreight(
@@ -141,6 +185,20 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
+    public Order addOrder(Order order) throws FruitException {
+        try{
+            expressInfoRepository.deleteByOrderExpressId(
+                    order.getOrderCommodity().getOrderCommodityId());
+
+            return orderRepository.save(order);
+        }catch (Exception e){
+            e.getStackTrace();
+            throw new FruitException(FruitMsgEnum.Exception);
+        }
+    }
+
+    @Override
     public void addOrderCommodity(OrderCommodity orderCommodity) throws FruitException {
         try {
 
@@ -163,11 +221,27 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Result findAllOrderListByPageable(PageRequest pageRequest) throws FruitException {
+    public Result findAllOrderListByPageable(PageRequest pageRequest, String orderVal) throws FruitException {
         try {
 
             Result result = new Result();
-            Page<Order> orders =  orderRepository.findAll(pageRequest);
+            Page<Order> orders =  null;
+
+            if( StringUtils.isEmpty(orderVal)){
+
+                orders = orderRepository.findAll(pageRequest);
+            }else{
+
+                orders = orderRepository.findAllByOrderIdContains(pageRequest,orderVal);
+
+                if(orders  == null || orders.getContent() == null ||
+                        orders.getContent().isEmpty()){
+
+                    orders = orderRepository.findAllByOrderCommodity_ExpressInfo_ExpressNo(
+                            pageRequest,orderVal);
+
+                }
+            }
 
             if( orders != null && orders.getContent() != null){
 
@@ -179,6 +253,78 @@ public class OrderServiceImpl implements OrderService {
             }
         }catch (Exception e){
             throw new FruitException(FruitMsgEnum.Exception);
+        }
+    }
+
+    /**
+     * 根据订单号或快递单号查询单个订单
+     * */
+    @Override
+    public Result findByOrderId(String id) throws FruitException {
+
+        try{
+            Result result = new Result();
+            Order order = orderRepository.findByOrderId(id);
+            if(order == null){
+                order = orderRepository.findByOrderCommodity_ExpressInfo_ExpressNo(id);
+            }
+            if(order == null){
+                throw new FruitException(FruitMsgEnum.NotFoundOrder);
+            }
+
+            OrderList orderList = fruitUtil.orderToOrderList(order);
+
+            List<ExpressInfo> expressInfoList = order.getOrderCommodity().getExpressInfo();
+
+            List<OrderExpressInfo> orderExpressInfos = new ArrayList<>();
+
+            if(expressInfoList != null && !expressInfoList.isEmpty()){
+                expressInfoList.forEach(expressInfo -> {
+                    OrderExpressInfo orderExpressInfo = new OrderExpressInfo();
+                    BeanUtils.copyProperties(expressInfo,orderExpressInfo);
+
+                    String lastProcessUrl = "https://api.chenyistyle.com/order/logisticLast?"
+                            + "trackingNo=" + expressInfo.getExpressNo()
+                            + "&expressCompanyName=" + expressInfo.getExpressCompany()
+                            + "&tmst="+ System.currentTimeMillis();
+
+                    //根据快递公司和快递单号查询快递最新进展
+                    OrderTracking orderTracking = restTemplate.getForObject(lastProcessUrl,OrderTracking.class);
+
+                    orderExpressInfo.setLastProcess(orderTracking.getLastProcess());
+
+                    orderExpressInfos.add(orderExpressInfo);
+                });
+                orderList.setExpressInfos(orderExpressInfos);
+            }
+
+            result.setResponseReplyInfo(orderList);
+
+            return result;
+        }catch (Exception e){
+            throw new FruitException(FruitMsgEnum.Exception);
+        }
+    }
+
+    @Override
+    public Result findOrderByOrderId(String orderId) throws FruitException {
+
+        try{
+            Result result = new Result();
+
+            Order order = orderRepository.findByOrderId(orderId);
+
+            if(order == null){
+                throw new FruitException(FruitMsgEnum.NotFoundOrder);
+            }
+
+            result.setResponseReplyInfo(order);
+
+            return result;
+        }catch (Exception e){
+
+            throw new FruitException(FruitMsgEnum.Exception);
+
         }
     }
 

@@ -21,17 +21,19 @@
                         <div class="col-sm-2  offset-sm-8">
                             <a class="btn btn-primary " th:href="@{/add/order}">添加订单</a>
                         </div>
-                        <!-- <div class="toolbar no-padding">
-                            <div class="btn-group">
-                                <span class="btn btn-xs "><a
-                                    th:href="@{/admin/products/add}"><i class="icon-plus"></i></a></span>
-                            </div>
-                        </div> -->
+                    </div>
+                    <div class="form-group row mt-10" style="margin-top: 35px;margin-bottom: 35px;">
+
+                        <div class="offset-sm-1 col-sm-8 ml-auto">
+                            <input type="text"  class="form-control" id="order-search" autocapitalize="off"
+                                   placeholder='请输入订单号或者快递单号' >
+                        </div>
+                        <button type="button" class="btn btn-primary offset-sm-1 col-sm-1 ml-auto" id="search-btn">查询</button>
                     </div>
                     <div class="widget-header">
                     </div>
                     <div class="table-responsive" style="margin-top: 1em;">
-                        <table class="table  table-hover table-striped" id="list-table">
+                        <table class="table  table-hover" id="list-table">
                             <thead>
                             <tr class="text-center" style="white-space:nowrap">
                                 <th >订单编号</th>
@@ -57,18 +59,40 @@
                                 <button class="pagination-page pointer btn btn-primary  first-page"   tabindex="-1">首页</button>
                             </li>
                             <li style="margin-left: 10px;">
-                                <button  class="pagination-page pointer btn btn-primary  previous-page"  tabindex="-1" ><<</button>
+                                <button  class="pagination-page pointer btn btn-primary  previous-page"  tabindex="-1" > << 上 </button>
                             </li>
                             <li style="margin-left: 10px;">
-                                <button  class="pagination-page pointer btn btn-primary next-page" >>></button>
+                                <button  class="pagination-page pointer btn btn-primary next-page" > >> 下 </button>
                             </li>
                             <li style="margin-left: 10px;">
-                                <button  class="btn btn-primary pointer last-page" href="#">末页</button>
+                                <button  class="pagination-page btn btn-primary pointer last-page" href="#">末页</button>
                             </li>
                         </ul>
                     </nav>
                 </div>
             </div>
+
+            <!-- 添加订单后结果的Modal -->
+            <div class="modal fade" id="result-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">提示</h5>
+                            <button type="button" class="close close-modal" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body" id="result-modal-info">
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary close-modal">取消</button>
+                            <button type="button" class="btn btn btn-primary close-modal">确定</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -80,9 +104,33 @@
 
     $(function($){
 
+        var resultModalInfoObj = $('#result-modal-info');
+
+        var orderSearchObj = $('#order-search');
+
+        var orderSearchVal = null;
         var orderList = window.ajax('GET','/order/list', {page:0,size : 5});
 
         window.drawOrderTableList(orderList);
+
+        //查询订单
+        $('#search-btn').click(function () {
+
+            orderSearchVal = orderSearchObj.val();
+
+            if(orderSearchObj != null && orderSearchVal.trim() != ''){
+
+                orderList = window.ajax('GET','/order/list', {page:0,size : 5,orderVal : orderSearchVal});
+
+                window.drawOrderTableList(orderList);
+
+            }else {
+                resultModalInfoObj.html('请输入查询内容');
+                resultModalInfoObj.attr('data-flag',false);
+            }
+            $('#result-modal').modal('show');
+
+        });
 
     });
 </script>

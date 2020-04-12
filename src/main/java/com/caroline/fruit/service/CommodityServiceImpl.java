@@ -36,7 +36,7 @@ public class CommodityServiceImpl implements CommodityService {
      * @throws FruitException
      * */
     @Override
-    public Result addComodityType(CommodityTypeFrom commodityTypeFrom) throws FruitException {
+    public Result addCommodityType(CommodityTypeFrom commodityTypeFrom) throws FruitException {
 
         try{
 
@@ -62,6 +62,11 @@ public class CommodityServiceImpl implements CommodityService {
             throw new FruitException(FruitMsgEnum.Exception);
         }
 
+    }
+
+    @Override
+    public Commodity addCommodity(Commodity commodity) throws FruitException {
+        return commodityRepository.save(commodity);
     }
 
     /**

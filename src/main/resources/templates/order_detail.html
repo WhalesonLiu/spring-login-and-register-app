@@ -1,0 +1,455 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>查看订单</title>
+  <div th:replace="fragments/header"/>
+</head>
+<body>
+
+<div th:replace="fragments/navbar :: header('index')"/>
+<main role="main" class="container">
+  <div class="container">
+
+    <div style="margin-top:20px">
+        <form  id="update-form" autocomplete="off">
+          <fieldset>
+              <h3>订单信息</h3>
+              <div th:if="${success}">
+                  <div class="alert alert-success" th:text="${success}"/>
+              </div>
+              <div th:if="${warning}">
+                  <div class="alert alert-warning" th:text="${warning}"/>
+              </div>
+
+              <div class="form-group row">
+                  <label for="payer-name" class="col-sm-2 col-form-label" >付款人姓名</label>
+                  <label  class="col-sm-3 col-form-label" id="payer-name" ></label>
+
+                  <label for="delivery-name" class="offset-sm-1  col-sm-2 col-form-label" >收货人姓名</label>
+                  <label  class="col-sm-2 col-form-label" id="delivery-name"  ></label>
+              </div>
+
+              <div class="form-group d-none">
+                  <input type="text"  class="form-control change" id="order-id" autocapitalize="off" name="orderId">
+              </div>
+
+
+              <div class="form-group row">
+                  <label for="is-after-market" class=" col-sm-2 col-form-label" >是否售后</label>
+                  <div class="col-sm-3">
+                      <select   class="form-control change" id="is-after-market" name="isAfterMarket">
+                          <option value="false">否</option>
+                          <option value="true">是</option>
+                      </select>
+                  </div>
+                  <label for="after-market-way" class=" offset-sm-1 after-market-way invisible offset-sm-1 col-sm-2 col-form-label invisible" >售后处理方式</label>
+                  <div class="col-sm-3">
+                      <select   class="form-control change after-market-way invisible" id="after-market-way" name="afterMarketWay">
+                          <option value="0">拒绝</option>
+                          <option value="1">退款</option>
+                          <option value="2">重发</option>
+                      </select>
+                  </div>
+              </div>
+              <div class="form-group row" id="order-status-row">
+
+                  <label for="order-status" class="col-sm-2 col-form-label" >订单状态</label>
+                  <div class="col-sm-3">
+                      <select   class="form-control change" id="order-status" name="orderStatus">
+                          <option value="0">预定中</option>
+                          <option value="1">待录入</option>
+                          <option value="2">未发货</option>
+                          <option value="3">已发货</option>
+                          <option value="4">已签收</option>
+                          <option value="5">已好评</option>
+                          <option value="6">取消</option>
+                          <option value="9">完成</option>
+                      </select>
+                  </div>
+
+                  <label for="is-pay" class="invisible is-pay offset-sm-1 col-sm-2 col-form-label" >付款</label>
+                  <div class="col-sm-3 invisible is-pay">
+                      <select   class="form-control change" id="is-pay" name="isPay">
+                          <option value="true">已付款</option>
+                          <option value="false">未付款</option>
+                      </select>
+                  </div>
+              </div>
+              <div class="form-group row add-express-info d-none" >
+                  <label for="express-company" class="col-sm-2 col-form-label" >快递公司</label>
+                  <div class="col-sm-3">
+                      <input type="text"  class="form-control change" id="express-company" autocapitalize="off" name="updateExpressCompany">
+                  </div>
+
+                  <label for="express-no" class="offset-sm-1 col-sm-2 col-form-label" >快递单号</label>
+                  <div class="col-sm-3">
+                      <input type="text"  class="form-control change" id="express-no" autocapitalize="off" name="updateExpressNo">
+                  </div>
+              </div>
+
+              <div class="form-group row refuse-reason-row d-none">
+                  <label for="refuse-reason" class="col-sm-2 col-form-label" >拒绝理由</label>
+
+                  <div class="col-sm-8">
+                      <input type="text"  class="change form-control" id="refuse-reason" autocapitalize="off" name="refuseReason">
+                  </div>
+              </div>
+              <div class="form-group row">
+                  <label for="remark" class=" change col-sm-2 col-form-label" >备注</label>
+
+                  <div class="col-sm-8">
+                      <input type="text"  class="change form-control"  name="remark" id="remark" autocapitalize="off">
+                  </div>
+              </div>
+              <ul class="list-unstyled" id="order-detail">
+
+
+              </ul>
+              <!--<ul class="list-unstyled" id="order-commodity-list">
+
+                  <li class="form-group" style="border: 1px dashed #ced4da;">
+                      <div class="form-group  row pl-1" style="margin-top: 10px;">
+                          <label for="order-commodity" class="col-sm-2 col-form-label" >商品名称</label>
+                          <label id="order-commodity" class="col-sm-2 col-form-label" ></label>
+
+
+                          <label for="commodity-num" class="offset-sm-1 col-sm-2 col-form-label" >数量</label>
+                          <label id="commodity-num" class="col-sm-2 col-form-label">数量</label>
+
+                      </div>
+                      <div class="form-group row pl-1">
+                          <label for="express-company" class="col-sm-2 col-form-label" >快递公司</label>
+                          <div class="col-sm-3">
+                              <input type="text"  class="form-control" id="express-company" autocapitalize="off"  name="expressCompany1">
+                          </div>
+
+                          <label for="express-no" class="offset-sm-1 col-sm-2 col-form-label" >快递单号</label>
+                          <div class="col-sm-3">
+                              <input type="text"  class="form-control" id="express-no" autocapitalize="off" name="expressNo"  >
+                          </div>
+                      </div>
+
+                      <div class="form-group  row pl-1">
+                          <label for="freight-1" class="col-sm-2 col-form-label" >运费</label>
+                          <div class="col-sm-3">
+                              <input type="number" name="freight1" class="form-control" id="freight-1" autocapitalize="off" min="0" step="0.01">
+                          </div>
+                      </div>
+                      <div class=" form-group row pl-1">
+                          <label class="col-sm-2 col-form-label" >优惠券</label>
+                          <div class="col-sm-3">
+                              <select class="form-control" id="coupon1">
+                                  <option value="0" selected="selected">无优惠券</option>
+                                  <option value="1" >1元优惠券</option>
+                                  <option value="2">2元优惠券</option>
+                                  <option value="3">3元优惠券</option>
+                                  <option value="4">4元优惠券</option>
+                                  <option value="5">5元优惠券</option>
+                              </select>
+                          </div>
+                          <label for="discount1" class="offset-sm-1 col-sm-2 col-form-label" >折扣</label>
+                          <div class="col-sm-3">
+                              <select id="discount1" class="form-control">
+                                  <option value="100%" selected="selected">不打折</option>
+                                  <option value="98%">9.8折</option>
+                                  <option value="95%">9.5折</option>
+                                  <option value="90%">9折</option>
+                                  <option value="88%">8.8折</option>
+                                  <option value="85%">8.5折</option>
+                                  <option value="80%">8折</option>
+                              </select>
+                          </div>
+                      </div>
+                      <div class="form-group row pl-1">
+                          <label for="remark1" class=" col-sm-2 col-form-label" >备注</label>
+                          <div class="col-sm-8">
+                              <input type="text"  class="form-control" id="remark1" autocapitalize="off">
+                          </div>
+                      </div>
+
+                  </li>
+              </ul>-->
+              <div class="form-group row">
+
+              </div>
+              <div class="form-group row" style="height: 80px;">
+              <!--<input type="submit" id="NCoV-add-submit-btn" class="btn btn-lg btn-primary btn-block center-block col-lg-4 offset-lg-4" value="添加"/>-->
+              </div>
+              <div class="fixed-bottom " style="background: #EEF0F4;height: 60px; opacity: 0.8;">
+                  <input type="button" id="update-info-btn" style="margin-right: 2em;" class="btn btn-primary float-right pointer" data-update-url="/order" value="更新"/>
+                  <input type="button" id="close-page" style="margin-right: 2em;" class="btn btn-primary float-right pointer" value="关闭"/>
+              </div>
+          </fieldset>
+        </form>
+
+        <!-- 添加订单后结果的Modal -->
+        <div class="modal fade" id="result-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">提示</h5>
+                        <button type="button" class="close close-modal" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="result-modal-info">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary close-modal">取消</button>
+                        <button type="button" data-url="/order"  class="btn btn-primary confirm-close-modal">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+  </div>
+</main>
+
+    <div th:replace="fragments/footer :: footer"/>
+
+</body>
+<script type="text/javascript">
+
+    $(function($){
+
+        var orderDetailObj = $('#order-detail');
+
+        var orderIdObj = $('#order-id');
+
+        //付款人姓名
+        var payerNameObj = $('#payer-name');
+
+        //收货人姓名
+        var deliveryNameObj = $('#delivery-name');
+
+        //订单状态
+        var orderStatusObj = $('#order-status');
+
+        //是否售后
+        var isAfterMarketObj = $('#is-after-market');
+
+        //售后处理方式
+        var afterMarketWayObj = $('#after-market-way');
+
+        //拒绝理由
+        var refuseReasonObj = $('#refuse-reason');
+
+        //备注
+        var remarkObj = $('#remark');
+
+        //是否付款
+        var isPayObj = $('#is-pay');
+
+
+        //添加快递信息
+        var addExpressInfoObj = $('.add-express-info');
+
+        var refuseReasonRowObj = $('.refuse-reason-row');
+
+        var orderStatusValue = null;
+
+        //订单详情数据
+        var orderInfo = null;
+
+        //获取订单编号
+        var orderId = localStorage.getItem('orderId');
+        orderIdObj.val(orderId);
+        var orderDetailResult = window.ajax('GET','/order/' + orderId,null);
+        console.log(orderDetailResult);
+
+        //设置订单详情
+        if(orderDetailResult.responseType == 'N'){
+
+            orderInfo = orderDetailResult.responseReplyInfo;
+            //付款人姓名
+            payerNameObj.html(orderInfo.payerName);
+
+            //收货人姓名
+            deliveryNameObj.html(orderInfo.deliveryName);
+
+            //是否售后
+            if(orderInfo.isAfterMarket){
+                isAfterMarketObj.val('true');
+                //显示售后处理方式
+                $('.after-market-way').removeClass('invisible');
+
+                //设置售后处理方式
+                var afterMarketWay = orderInfo.afterMarketWay;
+                afterMarketWayObj.val(afterMarketWay);
+
+                if(afterMarketWay == '0'){
+                    //显示拒绝理由
+                    refuseReasonRowObj.removeClass('d-none');
+                    //设置拒绝理由
+                    refuseReasonObj.val(orderInfo.refuseReason);
+                }else if(afterMarketWay == '0'){
+                    //
+                }
+
+            }else{
+                isAfterMarketObj.val('false');
+            }
+
+            //设置备注信息
+            remarkObj.val(orderInfo.remark);
+
+            //订单状态
+            orderStatusValue = orderInfo.orderStatusId;
+            orderStatusObj.val(orderStatusValue);
+            //orderStatusObj.find('option[value='+orderInfo.orderStatusId +']').attr("selected",true);
+
+            if(orderInfo.expressCompany == '' && orderInfo.expressNo == ''){
+                addExpressInfoObj.removeClass('d-none');
+            }
+            //是否支付
+            var isPay = orderInfo.isPay;
+
+
+            if(!isPay){
+                //如果未支付则显示支付状态
+                $('.is-pay').removeClass('invisible');
+                isPayObj.val('false');
+
+            }else {
+                isPayObj.val('true');
+            }
+
+            var expressli = $('<li style="padding: 10px 0px;margin-top:10px;border: 1px solid #ced4da;min-height: 110px;"></li>');
+            var expressImgDiv = $('<div class="float-left"  style="padding-left:10px;width:90px;"></div>');
+            var expressImgObj = $('<img   class="img-thumbnail m-auto" width="80">').attr('src',orderInfo.commodityUrl);
+            expressImgDiv.append(expressImgObj);
+            expressli.append(expressImgDiv);
+
+            var goodsInfoDiv = $('<div class="d-inline-block" style="padding-left: 10px;width:calc(100% - 90px);"></div>');
+            //商品名称
+            var  goodsNameSpan = $('<strong class="d-inline-block font-weight:bold;"></strong>').append(orderInfo.commodityName );
+            goodsInfoDiv.append(goodsNameSpan);
+            //商品数量
+            var goodsPieces = $('<span style="color: #909090;">&nbsp;×&nbsp;' +orderInfo.commodityNum + '</span>')
+            goodsInfoDiv.append(goodsPieces);
+
+            expressli.append(goodsInfoDiv);
+
+            var orderExpressStatusObj = $('<div class="d-inline-block" style="padding-left: 10px;width:calc(100% - 90px);"></div>');
+
+            //总价
+            var goodsAmountReceivable = $('<div class="d-inline-block " style="width: 80px;"></div>').append('<span style="color: #6C6C6C;font-size:0.8rem;">总价:</span>' +  '<span style="color: #1E5B30;font-weight:bold;">￥</span>' +
+                '<span style="color: #1E5B30;font-weight:bold;">'+
+                orderInfo.orderTotalPrice +'</span>');
+            orderExpressStatusObj.append(goodsAmountReceivable);
+            //订单状态
+            var orderStatus = $('<span class="d-inline-block float-right" style="padding-right: 10px; color: #FF4C00;"></span>').append( orderInfo.orderStatus);
+            orderExpressStatusObj.append(orderStatus);
+
+            expressli.append(orderExpressStatusObj);
+
+            var expressStatusObj = $('<div class="d-inline-block" style="padding-left: 10px;width:calc(100% - 90px);"></div>');
+            //运费
+            var goodsAmountShippingObj = $('<span class="d-inline-block " ></span>').append('<span style="color: #6C6C6C;font-size:0.8rem;">运费:</span>' +
+                '<span style="color: #1E5B30;font-weight:bold;">￥</span>' +
+                '<span style="color: #1E5B30;font-weight:bold;">'+orderInfo.freight+ '</span>');
+            expressStatusObj.append(goodsAmountShippingObj);
+            //日期
+            var commitTime = $('<span class="d-inline-block float-right" style="width: 95px;padding-right: 10px;color: gray;"></span>').append( window.getFormatDate(orderInfo.orderCreationDate));
+            expressStatusObj.append(commitTime);
+            expressli.append(expressStatusObj);
+
+
+            if(orderInfo.expressInfos != null){
+                orderInfo.expressInfos.forEach(function (orderTracking,i) {
+                    var orderTrackingDiv = $('<div class="express-detail-info" data-expressCompanyName="'+orderTracking.expressCompanyName+'" data-trackingNo="'+orderTracking.trackingNo+'" style="padding-left:10px;margin-top:15px;cursor:pointer;"></div>');
+                    /*orderTrackingDiv.data('expressCompanyName', orderTracking.expressCompanyName);
+                    orderTrackingDiv.data('trackingNo',orderTracking.trackingNo);*/
+
+                    var expressCompanyNameObj = $('<span style="color:#6c6c6c;font-size:0.9rem;" data-toggle="modal" data-target="#expressDetailModal"></span>').append(orderTracking.expressCompany + "：" + orderTracking.expressNo);
+                    orderTrackingDiv.append(expressCompanyNameObj);
+                    expressli.append(orderTrackingDiv);
+
+                    var lastProcessObj = $('<div class="d-inline-block express-detail-info"  data-expressCompanyName="'+orderTracking.expressCompany+'" data-trackingNo="'+orderTracking.expressNo+'"   style="cursor: pointer;padding: 0 10px;color: rgb(234, 122, 56);" data-toggle="modal" data-target="#expressDetailModal"></div>').append(orderTracking.lastProcess);
+                    expressli.append(lastProcessObj);
+
+                });
+            }
+
+
+            //快递最新信息
+            /*var orderTrackingDiv = $('<div class="express-detail-info" data-expressCompanyName="'+orderInfo.expressCompany+'" data-trackingNo="'+orderInfo.expressNo+'" style="padding-left:10px;margin-top:15px;cursor:pointer;"></div>');
+
+            var expressCompanyNameObj = $('<span style="color:#6c6c6c;font-size:0.9rem;" data-toggle="modal" data-target="#expressDetailModal"></span>').append(orderInfo.expressCompany + "：" + orderInfo.expressNo);
+            orderTrackingDiv.append(expressCompanyNameObj);
+            expressli.append(orderTrackingDiv);
+
+            var lastProcessObj = $('<div class="d-inline-block express-detail-info"  data-expressCompanyName="'+orderInfo.expressCompany+'" data-trackingNo="'+orderInfo.expressNo+'"   style="cursor: pointer;padding: 0 10px;color: rgb(234, 122, 56);" data-toggle="modal" data-target="#expressDetailModal"></div>').append(orderInfo.lastProcess);
+            expressli.append(lastProcessObj);*/
+            orderDetailObj.append(expressli);
+
+
+        }
+        var afterMarketWayObj = $('.after-market-way');
+        /**
+         * 0:否
+         * 1:是
+         * 售后状态为“是”，显示售后处理方式
+         * */
+        $('#is-after-market').change(function () {
+
+            var isAfterMarket = $(this).val();
+            if(isAfterMarket == 'true'){
+
+                $('.after-market-way').removeClass('invisible');
+                refuseReasonRowObj.removeClass('d-none');
+            }else {
+                $('.after-market-way').addClass('invisible');
+                orderStatusObj.find('option[value="20"]').remove();
+                //订单状态
+                orderStatusObj.val(orderStatusValue);
+
+                if(orderInfo.expressCompany != '' && orderInfo.expressNo != ''){
+                    addExpressInfoObj.addClass('d-none');
+                }
+                //隐藏拒绝理由
+                refuseReasonRowObj.addClass('d-none');
+            }
+        });
+        /**
+         * 售后处理方式处理
+         * 0:拒绝
+         * 1:退款
+         * 2:重发
+         * */
+        $('#after-market-way').change(function () {
+
+            var afterMarketWay = $(this).val();
+            //为退款时将订单状态状态设置为已退款
+            if(afterMarketWay == '1'){
+                //$('.after-market-way').removeClass('none');
+                var orderStatusOptObj = orderStatusObj.find('option[value="20"]');
+                console.log(orderStatusOptObj);
+                if( orderStatusOptObj.length == 0){
+                    orderStatusObj.append('<option value="20" >已退款</option>');
+                    orderStatusObj.find('option[value="20"]').attr("selected",true);
+                }
+                //隐藏拒绝理由
+                refuseReasonRowObj.addClass('d-none');
+                addExpressInfoObj.addClass('d-none');
+
+            }else if(afterMarketWay == '2'){
+                orderStatusObj.find('option[value="20"]').remove();
+                addExpressInfoObj.removeClass('d-none');
+                //隐藏拒绝理由
+                refuseReasonRowObj.addClass('d-none');
+            }else {
+                orderStatusObj.find('option[value="20"]').remove();
+                addExpressInfoObj.addClass('d-none');
+                //拒绝时显示
+                refuseReasonRowObj.removeClass('d-none');
+            }
+
+        });
+
+        //$(".index li:last").remove()
+    })
+</script>
+</html>

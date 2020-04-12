@@ -15,6 +15,8 @@ public class CommodityForm implements Serializable {
 
     private static final long serialVersionUID = -1212972316558114155L;
 
+    private String commodityId;
+
     private String commodityTypeId;
 
     private String commodityName;

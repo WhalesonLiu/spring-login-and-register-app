@@ -37,9 +37,13 @@ public class OrderServiceTestCase extends LibraryApplicationTests {
 
         orderService.addOrder(addOrderDto);*/
 
-        Result result = orderService.findAllOrderListByPageable(PageRequest.of(0,10));
+        Result result = orderService.findAllOrderListByPageable(PageRequest.of(0,10),"298");
 
         System.out.println(result);
         System.out.println(result.getResponseReplyInfo());
+        Page<Order> orders = (Page<Order>) result.getResponseReplyInfo();
+        orders.getContent().forEach( e->{
+            System.out.println(e);
+        });
     }
 }

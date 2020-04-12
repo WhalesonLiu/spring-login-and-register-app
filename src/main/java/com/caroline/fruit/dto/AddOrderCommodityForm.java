@@ -21,17 +21,11 @@ public class AddOrderCommodityForm implements Serializable {
 
     private String expressNo;
 
-    private BigDecimal freight;
+    private String freight;
 
     //优惠券
     private String couponId;
 
     private String discount;
 
-
-
-    public void setFreight(String freight){
-        BigDecimal bigDecimal = new BigDecimal(freight);
-        this.freight = bigDecimal.setScale(2,BigDecimal.ROUND_DOWN);
-    }
 }

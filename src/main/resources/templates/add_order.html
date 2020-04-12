@@ -76,14 +76,14 @@
                   <label for="remark" class=" col-sm-2 col-form-label" >备注</label>
 
                   <div class="col-sm-8">
-                      <input type="text"  class="form-control" id="remark" autocapitalize="off">
+                      <input type="text"  class="form-control" id="remark" autocapitalize="off" name="remark">
                   </div>
               </div>
               <ul class="list-unstyled" id="order-commodity-list">
 
                   <li class="form-group" style="border: 1px dashed #ced4da;">
                       <div class="form-group  row pl-1" style="margin-top: 10px;">
-                          <label for="order-commodity" class="col-sm-2 col-form-label" >商品1名称</label>
+                          <label for="order-commodity" class="col-sm-2 col-form-label" >商品名称</label>
                           <div class="col-sm-3">
                               <select id="order-commodity" class="form-control" name="commodityId1">
                               </select>
@@ -98,10 +98,11 @@
                           <div class="col-sm-3">
                               <input type="text"  class="form-control" id="express-company" autocapitalize="off" name="expressCompany1">
                           </div>
-
-                          <label for="express-no" class="offset-sm-1 col-sm-2 col-form-label" >快递单号</label>
-                          <div class="col-sm-3">
-                              <input type="text"  class="form-control" id="express-no" autocapitalize="off" name="expressNo1">
+                      </div>
+                      <div class="form-group row pl-1">
+                          <label for="express-no" class="col-sm-2 col-form-label" >快递单号</label>
+                          <div class="col-sm-10">
+                              <input type="text"  class="form-control" id="express-no" autocapitalize="off" name="expressNo1" placeholder="多个快递单号请以英文状态下的分号分割1;2;3">
                           </div>
                       </div>
                       <div class="form-group  row pl-1">

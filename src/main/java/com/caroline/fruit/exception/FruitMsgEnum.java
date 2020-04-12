@@ -51,7 +51,19 @@ public enum FruitMsgEnum {
 
     AddOrderSuccess("00020","添加订单成功"),
 
-    NotFoundOrderList("00021","没有获取到订单列表");
+    NotFoundOrderList("00021","没有获取到订单列表"),
+
+    NotFoundOrder("00022","没有查询到该订单"),
+
+    IllegalParameter("00023","非法参数"),
+
+    AddRedeliverOrderFailed("00024","添加重发订单信息失败"),
+
+    OrderNotPay("00025","订单未支付，请先支付"),
+
+    UpdateOrderFailed("00027","更新订单失败"),
+
+    UpdateOrderSuccess("00028","更新订单成功");
 
 
     private String responseCode;

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title th:text="${commodity.commodityName}"> </title>
+    <title> </title>
     <div th:replace="fragments/header"/>
 </head>
 <body>
@@ -11,7 +11,7 @@
     <div class="container">
 
         <div style="margin-top:20px">
-            <form  id="add-commodity-form" autocomplete="off">
+            <form  id="update-form" autocomplete="off">
                 <fieldset>
                     <h3></h3>
                     <div th:if="${success}">
@@ -22,16 +22,16 @@
                     </div>
 
                     <div class="row">
-                        <input type="hidden" class=" h3" th:data-id="${commodity.commodityId}" />
+                        <input type="hidden" class=" h3" id="commodity-id" name="commodityId"/>
                     </div>
                     <div class="row">
-                        <img class="img-thumbnail" th:src="${commodity.commodityUrl}" width="100">
-                        <label class=" my-auto ml-5 h3 text-center" th:text="${commodity.commodityName}"></label>
+                        <img class="img-thumbnail" id="commodity-url" width="100">
+                        <label class=" my-auto ml-5 h3 text-center" id="commodity-name"></label>
                     </div>
                     <div class="form-group row mt-3" >
-                        <label class="col-sm-2 col-form-label"  for="commodity-type">销量图类型</label>
+                        <label class="col-sm-2 col-form-label"  for="commodity-chart-type">销量图类型</label>
                         <div class="col-sm-3">
-                            <select class="form-control" id="commodity-type" name="commodityTypeId">
+                            <select class="form-control" id="commodity-chart-type" name="commodityTypeId">
 
                                 <option value="1">近一个月的销量走势图</option>
                                 <option value="2">近一个月的总销量走势图</option>
@@ -57,46 +57,86 @@
 
                         <div class="col-sm-6" id="total-sales-chart">
 
-
                         </div>
 
                     </div>
                     <div class="form-group row">
                         <label for="commodity-specifications" class="col-sm-2 col-form-label" >商品规格</label>
-                        <span  class="col-sm-3 col-form-label" id="commodity-specifications" th:text="${commodity.commoditySpecifications}"></span>
+
+                        <div class="col-sm-3">
+                            <input type="text"  class="form-control" id="commodity-specifications" autocapitalize="off" name="commoditySpecifications">
+                        </div>
 
                         <label for="origin-dispatch" class="offset-sm-1 col-sm-2 col-form-label" >产地/分发地</label>
-                        <span  class="col-sm-3 col-form-label" id="origin-dispatch" th:text="${commodity.originDispatch}"></span>
+                        <div class="col-sm-3">
+                            <input type="text"  class="form-control" id="origin-dispatch" autocapitalize="off" name="originDispatch">
+                        </div>
 
                     </div>
                     <div class="form-group row">
-                        <label for="original-price" class="col-sm-2 col-form-label" >成本价</label>
-                        <span  class="col-sm-3 col-form-label" id="original-price" th:text="${commodity.costPrice}"></span>
-
+                        <label for="cost-price" class="col-sm-2 col-form-label" >成本价</label>
+                        <div class="col-sm-3">
+                            <input type="number"  class="form-control" id="cost-price" autocapitalize="off" min="0" step="0.01" name="costPrice" >
+                        </div>
                         <label for="price" class="offset-sm-1 col-sm-2 col-form-label" >售价</label>
-                        <span  class="col-sm-3 col-form-label" id="price" th:text="${commodity.commodityPrice}"></span>
+                        <div class="col-sm-3">
+                            <input type="number"  class="form-control" id="price" autocapitalize="off" min="0" step="0.01" name="commodityPrice" required>
+                        </div>
                     </div>
                     <div class="form-group row">
 
                         <label for="commodity-desc" class="col-sm-2 col-form-label" >商品描述</label>
-                        <span  class="col-sm-3 col-form-label" id="commodity-desc" th:text="${commodity.commodityDesc}"></span>
+                        <div class="col-sm-8">
+                            <textarea  class="form-control" id="commodity-desc" autocapitalize="off" name="commodityDesc"></textarea>
+                        </div>
                     </div>
 
                     <div class="form-group row">
 
                         <label for="express-company" class="col-sm-2 col-form-label" >快递公司</label>
-                        <span  class="col-sm-3 col-form-label" id="express-company" th:text="${commodity.expressCompany}"></span>
+                        <div class="col-sm-8">
+                            <input type="text"  class="form-control" id="express-company" autocapitalize="off" name="expressCompany">
+                        </div>
                     </div>
 
                     <div class="form-group row">
                         <label for="comments" class=" col-sm-2 col-form-label" >说明</label>
-                        <span  class="col-sm-3 col-form-label" id="comments" th:text="${commodity.comments}"></span>
+                        <div class="col-sm-8">
+                            <textarea  class="form-control" id="comments" autocapitalize="off" name="comments"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group row" style="height: 80px;">
+                        <!--<input type="submit" id="NCoV-add-submit-btn" class="btn btn-lg btn-primary btn-block center-block col-lg-4 offset-lg-4" value="添加"/>-->
+                    </div>
+                    <div class="fixed-bottom " style="background: #EEF0F4;height: 60px; opacity: 0.8;">
+                        <input type="button" id="update-info-btn" style="margin-right: 2em;" class="btn btn-primary float-right pointer" data-update-url="/commodity" value="更新"/>
+                        <input type="button" id="close-page" style="margin-right: 2em;" class="btn btn-primary float-right pointer" value="关闭"/>
                     </div>
                 </fieldset>
             </form>
 
-        </div>
 
+            <!-- 添加订单后结果的Modal -->
+            <div class="modal fade" id="result-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">提示</h5>
+                            <button type="button" class="close close-modal" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body" id="result-modal-info">
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary close-modal">取消</button>
+                            <button type="button" data-url="/commodity"  class="btn btn-primary confirm-close-modal">确定</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </main>
 
@@ -114,6 +154,68 @@
 <script type="text/javascript">
 
     $(function($){
+
+        //订单id
+        var commodityIdObj = $('#commodity-id');
+
+        //商品图片
+        var commodityUrlObj = $('#commodity-url');
+
+        //商品名称
+        var commodityNameObj = $('#commodity-name');
+
+        //商品规格
+        var commoditySpecificationsObj = $('#commodity-specifications');
+
+        //产地/分发地
+        var originDispatchObj = $('#origin-dispatch');
+
+        //成本价
+        var costPriceObj = $('#cost-price');
+
+        //售价
+        var priceObj = $('#price');
+
+        //商品描述
+        var commodityDescObj = $('#commodity-desc');
+
+        //快递公司
+        var expressCompanyObj = $('#express-company');
+
+        //说明
+        var commentsObj = $('#comments');
+
+        //获取订单编号
+        var commodityId = localStorage.getItem('commodityId');
+        commodityIdObj.val(commodityId);
+
+        var commodityDetailResult = window.ajax('GET','/commodity/' + commodityId,null);
+        console.log(commodityDetailResult);
+
+        if(commodityDetailResult.responseType == 'N'){
+
+            var commodityInfo  = commodityDetailResult.responseReplyInfo;
+
+            commodityUrlObj.attr('src',commodityInfo.commodityUrl);
+            commodityNameObj.html(commodityInfo.commodityName);
+            $('title').html(commodityInfo.commodityName);
+            commoditySpecificationsObj.val(commodityInfo.commoditySpecifications);
+            originDispatchObj.val(commodityInfo.originDispatch);
+            costPriceObj.val(commodityInfo.costPrice);
+            priceObj.val(commodityInfo.commodityPrice);
+            commodityDescObj.val(commodityInfo.commodityDesc);
+            expressCompanyObj.val(commodityInfo.expressCompany);
+            commentsObj.val(commodityInfo.comments);
+
+        }
+        /**
+         * 销量图类型
+         * */
+        $('#commodity-chart-type').change(function(){
+
+            alert($(this).val());
+        });
+
 
         //过去一个月的销量图
         var pastMonthSalesChart = echarts.init(document.getElementById('past-month-sales-chart'));

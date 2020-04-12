@@ -39,11 +39,25 @@ public class Order extends CreateAndLastModifiedDate implements Serializable {
     private OrderCommodity orderCommodity;
 
     //是否售后
-    private Boolean isAftermarket;
+    private Boolean isAfterMarket;
+
+    //售后处理方式
+    private Integer afterMarketWay;
 
     //拒绝原因
     private String refuseReason;
 
     //订单状态
     private Integer orderStatus;
+
+    //备注
+    private String remark;
+
+    public void setOrderStatus(Integer orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = Integer.parseInt(orderStatus);
+    }
 }

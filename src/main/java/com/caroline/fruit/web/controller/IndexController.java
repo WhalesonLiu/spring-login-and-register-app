@@ -1,7 +1,10 @@
 package com.caroline.fruit.web.controller;
 
 import com.caroline.fruit.exception.FruitException;
+import com.caroline.fruit.message.Result;
+import com.caroline.fruit.projection.OrderList;
 import com.caroline.fruit.service.CommodityService;
+import com.caroline.fruit.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,19 +17,18 @@ public class IndexController {
 
     private final  CommodityService commodityService;
 
+    private final OrderService orderService;
+
     @Autowired
-    public IndexController(CommodityService commodityService){
+    public IndexController(CommodityService commodityService,
+                           OrderService orderService){
         this.commodityService = commodityService;
+        this.orderService = orderService;
     }
 
     @GetMapping("/")
     public String index(){
-        return "home";
-    }
-
-    @GetMapping("/add/2019-nCoV")
-    public String addCases() {
-        return "add_2019-nCoV";
+        return "index";
     }
 
 
@@ -34,6 +36,8 @@ public class IndexController {
     public String addUser(){
         return "add_user";
     }
+
+
     @GetMapping("/user")
     public String showUser(){
         return "user";
@@ -47,6 +51,12 @@ public class IndexController {
     @GetMapping("/add/order")
     public String addOrder(){
         return "add_order";
+    }
+
+    @GetMapping("/order/detail")
+    public String showOrderDetail() {
+
+        return "order_detail";
     }
 
 
@@ -72,13 +82,14 @@ public class IndexController {
     }
 
     @GetMapping("/commodity/detail")
-    public String showCommodityDetail(Model model, @RequestParam("id") String id)
+    public String showCommodityDetail()
             throws FruitException {
-
-        //商品信息
-        model.addAttribute("commodity",commodityService.getCommodityById(id));
 
         return "commodity_detail";
     }
 
+    @GetMapping("/add/2019-nCoV")
+    public String addCases() {
+        return "add_2019-nCoV";
+    }
 }

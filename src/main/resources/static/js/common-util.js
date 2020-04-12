@@ -101,7 +101,7 @@
             div1Obj.append(commodityNameLbObj);
             var div1Sub1Obj = $('<div class="col-sm-3"></div>');
             //商品select
-            var commodityNameSlctObj = $('<select id="order-commodity" class="form-control" name="commodityName'+ elementId +'"></select>');
+            var commodityNameSlctObj = $('<select id="order-commodity" class="form-control" name="commodityId'+ elementId +'"></select>');
             var commodityNameIptObj = $('#order-commodity option').clone();
             commodityNameSlctObj.append(commodityNameIptObj);
             div1Sub1Obj.append(commodityNameSlctObj);
@@ -123,15 +123,17 @@
             var expressCompanyIptObj = $('<input type="text"  class="form-control" id="express-company" name="expressCompany'+ elementId +'" autocapitalize="off">');
             div4ObjSub1Obj.append(expressCompanyIptObj);
             div4Obj.append(div4ObjSub1Obj);
+            liObj.append(div4Obj);
 
             //快递单号label
-            var expressNoLbObj = $('<label for="express-no" class="offset-sm-1 col-sm-2 col-form-label" ></label>').html('快递单号');
-            div4Obj.append(expressNoLbObj);
-            var div4ObjSub2Obj = $('<div class="col-sm-3"></div>');
-            var  expressNoIptObj = $('<input type="text"  class="form-control" id="express-no" name="expressNo'+ elementId +'" autocapitalize="off">');
-            div4ObjSub2Obj.append(expressNoIptObj);
-            div4Obj.append(div4ObjSub2Obj);
-            liObj.append(div4Obj);
+            var div5Obj = $('<div class="form-group row pl-1" style="margin-top: 10px;"></div>');
+            var expressNoLbObj = $('<label for="express-no" class=" col-sm-2 col-form-label" ></label>').html('快递单号');
+            div5Obj.append(expressNoLbObj);
+            var div5ObjSub1Obj = $('<div class="col-sm-10"></div>');
+            var  expressNoIptObj = $('<input type="text"  class="form-control" id="express-no" name="expressNo'+ elementId +'" autocapitalize="off" placeholder="多个快递单号请以英文状态下的分号分割1;2;3">');
+            div5ObjSub1Obj.append(expressNoIptObj);
+            div5Obj.append(div5ObjSub1Obj);
+            liObj.append(div5Obj);
 
             var div2Obj = $('<div class="form-group row pl-1" style="margin-top: 10px;"></div>');
             //运费label
@@ -274,7 +276,7 @@
     function ajax(method,url,param) {
         var result = null;
         console.log(JSON.stringify(param));
-        if(method == 'POST'){
+        if(method == 'POST' || method == 'PUT'){
             param = JSON.stringify(param);
         }
         $.ajax({
@@ -327,7 +329,7 @@
             lastPageObj.removeClass('disabled');
 
             nextPageObj.attr('data-page',content.number +1);
-            lastPageObj.attr('data-page',content.totalPages);
+            lastPageObj.attr('data-page',content.totalPages - 1);
 
         }else if(content.last){
             firstPageObj.removeClass('disabled');
@@ -348,7 +350,9 @@
             previousPageObj.attr('data-page',content.number -1);//1
             nextPageObj.attr('data-page',content.number + 1);
             lastPageObj.attr('data-page',content.totalPages -1);
+
         }
+
 
         pageInfoObj.html('第'+ (content.number +1) +'页/共'+ content.totalPages +'页(共'+ content.totalElements+'条)');
 
@@ -364,12 +368,55 @@
 
         var addFlag = resultModalInfoObj.attr('data-flag');
 
-        if(addFlag){
+        if(addFlag == "true"){
             window.location.href =resultModalInfoObj.attr('data-url');
         }
 
     });
 
+    /**
+     * 关闭当前页面
+     * */
+    $('#close-page').on('click',function(){
+        var resultModalInfoObj = $('#result-modal-info');
+        resultModalInfoObj.html('您确定要关闭当前界面吗？');
+        $('#result-modal').modal('show');
+
+    });
+    /**
+     * 点击模态框的确定按钮
+     * */
+    $('.confirm-close-modal').on('click',function(){
+        window.location.href =$(this).attr('data-url');
+    });
+
+    /**
+     * 详情页更新信息
+     * */
+    $('#update-info-btn').on('click',function(){
+
+        var resultModalInfoObj = $('#result-modal-info');
+
+        var updateFormObj = $('#update-form');
+        var updateFormArrays = updateFormObj.serializeArray();
+        var updateObj = {};
+        $.each(updateFormArrays, function() {
+            if(this.value == "true"){
+                this.value = true;
+            }else if( this.value == "false"){
+                this.value = false;
+            }
+            updateObj[this.name] = this.value;
+        });
+        console.log(updateObj);
+        var updateUrl = $(this).attr('data-update-url');
+        var updateResult = window.ajax('PUT',updateUrl,updateObj);
+        console.log(updateResult);
+
+        resultModalInfoObj.html(updateResult.responseMessage);
+
+        $('#result-modal').modal('show');
+    });
     //表格信息，点击行后显示详情
     $('#list-table').on("click","tr", function(){
 
@@ -380,7 +427,14 @@
         console.log(url);
 
         if( url != null && url != ''){
-            window.location.href = url + '?id=' + id;
+            window.location.href = url;
+            if(url == '/order/detail'){
+                localStorage.removeItem('orderId');
+                localStorage.setItem('orderId',id);
+            }else if(url == '/commodity/detail'){
+                localStorage.removeItem('commodityId');
+                localStorage.setItem('commodityId',id);
+            }
         }
 
     });
@@ -389,7 +443,7 @@
     $('#pagination-list').on('click','.pagination-page',function(){
         var paginationListObj = $('#pagination-list');
         var url = paginationListObj.data('url');
-        var pageNo = $(this).data('page');
+        var pageNo = $(this).attr('data-page');
         var size = paginationListObj.data('size');
         var pageName = paginationListObj.data('page-name');
 
@@ -430,10 +484,11 @@
                 trObj.append(orderAccountObj);
                 var grossProfitObj = $('<td></td>');
                 trObj.append(grossProfitObj);
-                var operationObj = $('<td class="p-0 align-middle text-center"></td>');
+
+                /*var operationObj = $('<td class="p-0 align-middle text-center"></td>');
                 var editOperationObj = $('<a  class="btn btn-primary btn-sm text-white">编辑</a>');
                 operationObj.append(editOperationObj);
-                trObj.append(operationObj);
+                trObj.append(operationObj);*/
 
                 listTableObj.append(trObj);
             });
@@ -496,11 +551,8 @@
                 trObj.append(commoditySpecificationsTd);
 
                 //操作
-                var operationObj = $('<td class="p-0 align-middle text-center"></td>');
-                var editOperationObj = $('<a  class="btn btn-primary btn-sm text-white" id="">编辑</a>');
-                operationObj.append(editOperationObj);
-
-                trObj.append(operationObj);
+                var totalProfitTd = $('<td class="p-0 align-middle text-center"></td>').html('0');
+                trObj.append(totalProfitTd);
 
                 listTableObj.append(trObj);
             });
@@ -518,19 +570,19 @@
             listTableObj.empty();
             var listContent = result.responseReplyInfo.content;
             listContent.forEach(function (element, index) {
-                var trObj = $('<tr></tr>');
+                var trObj = $('<tr style="color: white"></tr>');
 
                 trObj.attr('data-id', element.orderId);
-                trObj.attr('data-url', '/commodity/detail');
+                trObj.attr('data-url', '/order/detail');
                 trObj.addClass('pointer');
 
                 //订单编号
-                var orderIdTd = $('<td></td>').html(element.orderId);
+                var orderIdTd = $('<td  class="text-center"></td>').html(element.orderId);
                 trObj.append(orderIdTd);
 
 
                 //订单日期
-                var creationDateTd = $('<td></td>').html(getFormatDate(element.orderCreationDate));
+                var creationDateTd = $('<td class="text-center"></td>').html(getFormatDate(element.orderCreationDate));
                 trObj.append(creationDateTd);
 
                 //商品
@@ -539,19 +591,70 @@
                 trObj.append(commodityTd);
 
                 //付款人
-                var payerNameTd = $('<td></td>').html(element.payerName);
+                var payerNameTd = $('<td class="text-center"></td>').html(element.payerName);
                 trObj.append(payerNameTd);
                 //收货人
-                var deliveryNameTd = $('<td></td>').html(element.deliveryName);
+                var deliveryNameTd = $('<td class="text-center"></td>').html(element.deliveryName);
                 trObj.append(deliveryNameTd);
 
                 //商品总额
-                var orderTotalPriceTd = $('<td></td>').html(element.orderTotalPrice);
+                var orderTotalPriceTd = $('<td  class="text-center"></td>').html(element.orderTotalPrice);
                 trObj.append(orderTotalPriceTd);
 
                 //订单状态
-                var orderStatusTd = $('<td></td>').html(element.orderStatus);
+                var orderStatusTd = $('<td  class="text-center"</td>').html(element.orderStatus);
                 trObj.append(orderStatusTd);
+
+                //订单状态Id
+                var orderStatusId = element.orderStatusId;
+                switch (orderStatusId) {
+                    case 0:
+                        trObj.css('background','#DB7093');
+                        break;
+                    case 1:
+                        trObj.css('background','#DC143C');
+                        break;
+                    case 2:
+                        trObj.css('background','#6BBE45');
+                        break;
+                    case 3:
+                        trObj.css('background','#3CB878');
+                        break;
+                    case 4:
+                        trObj.css('background','#1F9BCA');
+                        break;
+                    case 5:
+                        trObj.css('background','#2C6EA5');
+                        break;
+                    case 6:
+                        trObj.css('background','#A9A9A9');
+                        break;
+                    case 9:
+                        trObj.css('background','#20B2AA');
+                        break;
+                    case 20:
+                        trObj.css('background','#B21D4B');
+                        break;
+                    case 21:
+                        trObj.css('background','#C9DB31');
+                        break;
+                    case 22:
+                        trObj.css('background','#FFA07A');
+                        break;
+
+                }
+                /*0:预定中
+                1:待录入
+                2:未发货
+                3:已发货
+                4:已签收
+                5:已好评
+                6:取消
+                9:完成
+                20:已退款
+                21:待处理
+                22:处理中*/
+
 
                 /*//付款方式*/
                 listTableObj.append(trObj);
@@ -573,5 +676,27 @@
         return year + '-' + month + '-'+ date;
     }
     window.getFormatDate = getFormatDate;
+
+    /**
+     * 将boolean转换为String类型的int值
+     * */
+    var booleanToStringInt = function(value){
+
+        if(value instanceof Boolean){
+            if(value){
+                return "1";
+            }else{
+                return "0";
+            }
+        }else if(value instanceof String){
+            if(value == "true"){
+                return "1";
+            }else{
+                return "0";
+            }
+        }
+    }
+
+    window.booleanToStringInt = booleanToStringInt;
 
 })(window);

@@ -38,16 +38,19 @@ public class UserServiceImpl implements UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private AuthenticationManager authenticationManager;
 
+    private final FruitUtil fruitUtil;
     @Autowired
     public UserServiceImpl(UserRepository userRepository, RoleService roleService,
                            @Lazy BCryptPasswordEncoder bCryptPasswordEncoder,
                            @Lazy AuthenticationManager authenticationManager,
-                           DeliveryInfoRepository deliveryInfoRepository) {
+                           DeliveryInfoRepository deliveryInfoRepository,
+                           FruitUtil fruitUtil) {
         this.userRepository = userRepository;
         this.roleService = roleService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.authenticationManager = authenticationManager;
         this.deliveryInfoRepository = deliveryInfoRepository;
+        this.fruitUtil = fruitUtil;
     }
 
     @Override
@@ -99,6 +102,7 @@ public class UserServiceImpl implements UserService {
             Result result = new Result();
 
             User user = new User();
+            user.setId(fruitUtil.getTableId());
             user.setRealName(addUserDto.getRealName());
             user.setGender(addUserDto.getGender());
             user.setWeChatAccount(addUserDto.getWeChatAccount());

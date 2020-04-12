@@ -10,7 +10,9 @@ import org.springframework.data.domain.Pageable;
 
 public interface CommodityService {
 
-    Result addComodityType(CommodityTypeFrom commodityTypeFrom) throws FruitException;
+    Result addCommodityType(CommodityTypeFrom commodityTypeFrom) throws FruitException;
+
+    Commodity addCommodity(Commodity commodity) throws FruitException;
 
 
     /**

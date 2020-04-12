@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 订单里面的商品，涉及订单信息(物流信息)
@@ -32,12 +33,6 @@ public class OrderCommodity implements Serializable {
 
     private Integer commodityNum;
 
-    //快递公司
-    private String expressCompany;
-
-    //快递单号
-    private String expressNo;
-
     //运费
     @Column(precision=10, scale=2)
     private BigDecimal freight;
@@ -50,5 +45,9 @@ public class OrderCommodity implements Serializable {
     //折扣
     @Column(precision=10, scale=2)
     private BigDecimal discount;
+
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @JoinColumn(name ="order_express_id" )
+    private List<ExpressInfo> expressInfo;
 
 }

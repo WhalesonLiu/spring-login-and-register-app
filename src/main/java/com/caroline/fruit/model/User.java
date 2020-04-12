@@ -39,7 +39,6 @@ public class User extends CreateAndLastModifiedDate implements UserDetails, Seri
   private static final long serialVersionUID = 1881229773610861294L;
 
   @Id
-  @GeneratedValue
   private Long id;
 
   @NotEmpty

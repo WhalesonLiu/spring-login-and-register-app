@@ -4,6 +4,7 @@ import com.caroline.fruit.dto.CommodityForm;
 import com.caroline.fruit.exception.FruitException;
 import com.caroline.fruit.exception.FruitMsgEnum;
 import com.caroline.fruit.message.Result;
+import com.caroline.fruit.model.Commodity;
 import com.caroline.fruit.service.CommodityService;
 import com.caroline.fruit.web.dto.CommodityTypeFrom;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class CommodityController {
     @PostMapping("/type/add")
     public Result addCommodityType(@RequestBody CommodityTypeFrom commodityTypeFrom) throws FruitException {
 
-        return commodityService.addComodityType(commodityTypeFrom);
+        return commodityService.addCommodityType(commodityTypeFrom);
 
     }
 
@@ -69,6 +70,75 @@ public class CommodityController {
 
         return commodityService.getAllCommodities();
 
+    }
+
+    /**
+     * 根据订单id或快递单号获取订单详情
+     * */
+    @GetMapping("/{commodityId}")
+    public Result getCommodityDetail(@PathVariable("commodityId") String commodityId) throws FruitException{
+        try {
+
+            Result result = new Result();
+            Commodity commodity = commodityService.getCommodityById(commodityId);
+            if(commodity == null){
+                throw new FruitException(FruitMsgEnum.CommodityResultEmpty);
+            }else {
+                result.setResponseReplyInfo(commodity);
+            }
+            return result;
+        }catch (Exception e){
+            throw new FruitException(FruitMsgEnum.Exception);
+        }
+    }
+
+    @PutMapping
+    public Result updateCommodity(@RequestBody CommodityForm commodityFrom) throws FruitException{
+        try {
+
+            Commodity commodity =
+                    commodityService.getCommodityById(commodityFrom.getCommodityId());
+
+            if (commodity == null){
+                throw new FruitException(FruitMsgEnum.CommodityResultEmpty);
+            }
+            //设置更新值
+
+            //设置规格
+            commodity.setCommoditySpecifications(
+                    commodityFrom.getCommoditySpecifications());
+
+            //设置产地/分发地
+            commodity.setOriginDispatch(commodityFrom.getOriginDispatch());
+
+            //设置成本价
+            //commodity
+
+            //售价
+            commodity.setCommodityPrice(commodityFrom.getCommodityPrice());
+
+            //商品描述
+            commodity.setCommodityDesc(commodityFrom.getCommodityDesc());
+
+            //快递公司
+            commodity.setExpressCompany(commodityFrom.getExpressCompany());
+
+            //说明
+            commodity.setComments(commodityFrom.getComments());
+            //commodityService.
+
+           commodity = commodityService.addCommodity(commodity);
+
+           if( commodity == null){
+               throw new FruitException(FruitMsgEnum.InsertCommodityFailed);
+           }else {
+               return new Result(FruitMsgEnum.InsertCommoditySuccess);
+           }
+        }catch (Exception e){
+
+            e.getStackTrace();
+            throw new FruitException(FruitMsgEnum.Exception);
+        }
     }
 
     @GetMapping("/lists")

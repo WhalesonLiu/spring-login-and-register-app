@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>NCP</title>
+  <title>主页</title>
   <div th:replace="fragments/header"/>
 </head>
 <body>
@@ -9,33 +9,54 @@
 <div th:replace="fragments/navbar :: header('index')"/>
 <main role="main" class="container">
   <div class="container">
+
+
+    <div style="margin-top:40px">
+      <form  id="add-2019-nCoV-form" autocomplete="off">
+        <fieldset>
+          <!--<h3>添加商品</h3>-->
+          <div th:if="${success}">
+            <div class="alert alert-success" th:text="${success}"/>
+          </div>
+          <div th:if="${warning}">
+            <div class="alert alert-warning" th:text="${warning}"/>
+          </div>
+
+          <div class="form-group row">
+
+            <label for="search-commodity" class="col-sm-2 col-form-label" >商品名称</label>
+            <div class="col-sm-3">
+                <input type="text"  class="form-control" id="search-commodity" autocapitalize="off" placeholder="请输入要查询的商品名称">
+            </div>
+          </div>
+
+
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label" >销量图时间段</label>
+            <div class="col-sm-3">
+              <select class="form-control">
+                <option value="fresh-fruit" selected="selected">最近一周</option>
+                <option value="vegetables">最近一个月</option>
+                <option value="casual-snacks">最近一季度</option>
+                <option value="casual-snacks">最近半年</option>
+                <option value="casual-snacks">一年内</option>
+                <option value="casual-snacks">所有</option>
+              </select>
+            </div>
+
+            <button type="button" class="btn btn-primary offset-sm-1 col-sm-2">查询</button>
+
+          </div>
+
+        </fieldset>
+      </form>
+    </div>
     <div class="starter-template">
-      <h3>新型冠状病毒感染的肺炎疫情情况</h3>
     </div>
-    <input type="file" id="file">
-    <button id="submit-file">提交</button>
     <!-- 新增确诊病例-->
-    <div class="row" id="2019nCoV-new-confirmed-cases" style="height:400px;">
+    <div class="row" id="commodity-sale-chart" style="height:400px;">
 
     </div>
-    <!--累计确诊病例(例)-全国-->
-    <div class="row" id="2019nCoV-cumulativeConfirmedCases-chart" style="height:400px;">
-
-    </div>
-    <!--密切接触者(人)-全国|疑似病例-全国|正在接受医学观察(人)-全国-->
-    <div class="row" id="2019nCoV-closeContactsSuspectedCaseWatching-chart" style="height:400px;">
-
-    </div>
-
-    <div class="row" id="2019nCoV-new-deaths-chart" style="height:400px;">
-
-    </div>
-    <!--港澳台通报确诊病例-->
-    <div class="row" id="2019nCoV-KongMacaoTai-chart" style="height:400px;">
-
-    </div>
-
-
   </div>
 </main>
 
@@ -46,19 +67,24 @@
 
   <script src="https://cdn.bootcss.com/echarts/4.4.0-rc.1/echarts.min.js"></script>
 
+  <script src="/js/common-util.js"></script>
 </footer>
 </body>
 <script type="text/javascript">
 
   window.onload = function(){
+
     $('#submit-file').click(function () {
-      var file = $('#file').files[0];
+      var file = $(":file");
       var reader = new FileReader();
       reader.readAsText(file);
       reader.onload = function () {
         var ss = this.result.split("\r\n")[1].split(",")[0];
       }
     });
+
+    //新增确诊病例
+    //window.drawChart('commodity-sale-chart', '最近一周销售量前三的产品', null,['closeContacts','suspectedCase','watching']);
 
   }
 
